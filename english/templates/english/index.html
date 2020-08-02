@@ -4,4 +4,14 @@
     <label for="file_doc">Upload a file: </label>
     <input id="file_doc" type="file" name="file_doc">
     <input type="submit" value="Submit">
+
+</form>
+
+<br />
+<br />
+
+<form>
+{% csrf_token %}
+{{ form }}
+<input type="submit" value="Submit">
 </form>
