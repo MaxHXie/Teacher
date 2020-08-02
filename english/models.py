@@ -1,12 +1,12 @@
 from django.db import models
+from django.utils import timezone
 
 class Essay(models.Model):
-    title = models.CharField(max_length=200)
-    file = models.FileField()
-    upload_datetime = models.DateTimeField('date uploaded')
-    words = models.IntegerField(null=True)
+    upload_datetime = models.DateTimeField('date uploaded', default=timezone.now())
+    words = models.IntegerField()
     price = models.IntegerField(null=True)
-    paid = models.BooleanField()
+    paid = models.BooleanField(default=False)
+    completed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.title
+        return str(self.id)

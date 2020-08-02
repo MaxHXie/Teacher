@@ -1,4 +1,7 @@
-from django import forms
+from django.forms import ModelForm
+from .models import Essay
 
-class UploadFileForm(forms.Form):
-    file = forms.FileField()
+class EssayForm(ModelForm):
+    class Meta:
+        model = Essay
+        fields = ['words']
