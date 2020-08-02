@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'essay.apps.EssayConfig',
+    'english.apps.EnglishConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
