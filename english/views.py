@@ -14,7 +14,7 @@ class IndexView(generic.edit.FormView):
         files = request.FILES.getlist('file_field')
         if form.is_valid():
             for f in files:
-                print(f.title)
+                print("received file")
             return self.form_valid(form)
         else:
             return self.form_invalid(form)

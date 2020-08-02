@@ -4,6 +4,8 @@ class Essay(models.Model):
     title = models.CharField(max_length=200)
     file = models.FileField()
     upload_datetime = models.DateTimeField('date uploaded')
+    words = models.IntegerField()
+    price = models.IntegerField()
     paid = models.BooleanField()
 
     def __str__(self):
