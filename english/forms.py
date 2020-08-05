@@ -4,4 +4,4 @@ from .models import Essay
 class EssayForm(ModelForm):
     class Meta:
         model = Essay
-        fields = ['words', 'email']
+        fields = ['essay_text']
