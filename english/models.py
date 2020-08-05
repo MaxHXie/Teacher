@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.template.defaultfilters import truncatechars  # or truncatewords
 import uuid
 
 class Essay(models.Model):
@@ -15,3 +16,7 @@ class Essay(models.Model):
 
     def __str__(self):
         return str(self.essay_id)
+
+    @property
+    def shorter_essay_text(self):
+        return truncatechars(self.essay_text, 100)

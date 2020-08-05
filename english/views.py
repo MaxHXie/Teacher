@@ -1,4 +1,6 @@
-from django.http import HttpResponseRedirect
+import json
+
+from django.http import JsonResponse
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
 from .forms import EssayForm
@@ -19,14 +21,21 @@ def index(request):
 
 def payment(request, essay):
 
+    return render(request, 'english/payment.html', {'essay': essay})
+
     # Process payment here
 
-    if True:
-        return payment_success(request, essay)
-    else:
-        return payment_fail(request, essay)
+    #if True:
+    #    return payment_success(request, essay)
+    #else:
+    #    return payment_fail(request, essay)
 
-def payment_success(request, essay):
+def payment_success(request):
+    body = json.loads(request.body)
+    print("BODY", body)
+    essay = get_object_or_404(Essay, pk=body['essay_id'])
+    essay.paid = True
+    essay.save()
     return render(request, 'english/payment_success.html')
 
 def payment_fail(request):
@@ -34,4 +43,4 @@ def payment_fail(request):
 
 def calc_price(characters):
     price = 10 + characters / 30
-    return float(price)
+    return round(float(price), 1)
