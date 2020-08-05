@@ -7,9 +7,10 @@ class EssayAdmin(admin.ModelAdmin):
     'upload_datetime',
     'words',
     'price',
+    'currency',
     'paid',
     'completed',
     ]
-    list_display = ('upload_datetime', 'words', 'price', 'paid', 'completed')
+    list_display = ('upload_datetime', 'words', 'price', 'currency', 'paid', 'completed')
 
 admin.site.register(Essay, EssayAdmin)
