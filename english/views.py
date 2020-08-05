@@ -20,26 +20,25 @@ def index(request):
     return render(request, 'english/index.html', {'form': form})
 
 def payment(request, essay):
-
     return render(request, 'english/payment.html', {'essay': essay})
 
-    # Process payment here
-
-    #if True:
-    #    return payment_success(request, essay)
-    #else:
-    #    return payment_fail(request, essay)
-
-def payment_success(request):
+def payment_success_backend(request):
     body = json.loads(request.body)
     print("BODY", body)
     essay = get_object_or_404(Essay, pk=body['essay_id'])
     essay.paid = True
     essay.save()
-    return render(request, 'english/payment_success.html')
+    return JsonResponse('Payment completed!', safe=False)
 
-def payment_fail(request):
-    pass
+def payment_result(request, essay_id):
+    try:
+        essay = Essay.objects.get(pk=essay_id)
+    except Essay.DoesNotExist:
+        essay = None
+    if essay != None:
+        return render(request, 'english/payment_success.html', {'essay': essay})
+    else:
+        return render(request, 'english/payment_fail.html')
 
 def calc_price(characters):
     price = 10 + characters / 30
