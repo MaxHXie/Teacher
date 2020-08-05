@@ -4,6 +4,7 @@ from .models import Essay
 
 class EssayAdmin(admin.ModelAdmin):
     fields = [
+    'email',
     'upload_datetime',
     'words',
     'price',
@@ -11,6 +12,6 @@ class EssayAdmin(admin.ModelAdmin):
     'paid',
     'completed',
     ]
-    list_display = ('upload_datetime', 'words', 'price', 'currency', 'paid', 'completed')
+    list_display = ('email', 'upload_datetime', 'words', 'price', 'currency', 'paid', 'completed')
 
 admin.site.register(Essay, EssayAdmin)
