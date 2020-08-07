@@ -9,7 +9,6 @@
 <body>
     <!-- Set up a container element for the button -->
     <div id="paypal-button-container"></div>
-
     <!-- Include the PayPal JavaScript SDK -->
     <script src="https://www.paypal.com/sdk/js?client-id=AepAHC6vwsZ-or_rY0hggQ6-e-Rt_3mkiINDyUIq5akG2DZJIOjiVwJoYxfPgcmXeyytf0adbyGfqa8a&currency={{ essay.currency }}"></script>
 
@@ -67,7 +66,7 @@
                 return actions.order.capture().then(function(details) {
                     // Show a success message to the buyer
                     completePayment()
-                    window.location.href = "{% url 'english:payment_result' essay_id %}";
+                    window.location.href = "{% url 'english:payment_result' essay.essay_id %}";
                 });
             }
 
