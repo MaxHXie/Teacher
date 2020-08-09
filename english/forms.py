@@ -7,6 +7,6 @@ class EssayForm(forms.ModelForm):
         fields = ['email', 'essay_text']
 
         widgets = {
-            'email': forms.TextInput(attrs={'class':'form-control transparent', 'placeholder':'Your email here'}),
-            'essay_text': forms.Textarea(attrs={'class':'form-control transparent', 'placeholder':'Copy paste your essay here', 'rows':14}),
+            'email': forms.EmailInput(attrs={'class':'form-control transparent', 'placeholder':'Your email here'}),
+            'essay_text': forms.Textarea(attrs={'class':'form-control transparent', 'placeholder':'Copy paste your essay here', 'rows':12}),
         }

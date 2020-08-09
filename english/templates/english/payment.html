@@ -9,7 +9,7 @@
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
 
-    <title>The cut</title>
+    <title>ease-a</title>
 
     <link href="{% static 'english/assets/css/bootstrap.css' %}" rel="stylesheet" />
 	<link href="{% static 'english/assets/css/coming-sssoon.css' %}" rel="stylesheet" />
@@ -86,101 +86,101 @@
     <!-- -->
   </div><!-- /.container -->
 </nav>
-    <div class="main" style="background-image: url('{% static 'english/assets/images/restaurant.jpg' %}')">
+<div class="main" style="background-image: url('{% static 'english/assets/images/writer_wallpaper.jpg' %}')">
 
-    <!--    Change the image source '/images/restaurant.jpg')" with your favourite image.     -->
+<!--    Change the image source '/images/restaurant.jpg')" with your favourite image.     -->
 
 
-    <div class="cover black" data-color="black"></div>
+<div class="cover black" data-color="black"></div>
 
-    <!--   You can change the black color for the filter with those colors: blue, green, red, orange       -->
+<!--   You can change the black color for the filter with those colors: blue, green, red, orange       -->
 
-        <div class="container">
-            <h1 class="logo">
-                Checkout
-            </h1>
-            <div class="content">
-                <div class="subscribe">
-                    <h5 class="info-text">
-                        <i>
-                            Awesome! Just 1 step away!
-                        </i>
-                    </h5>
-                    <div class="row">
-                        <div class="col-md-8 col-md-offset-2 col-sm6-6 col-sm-offset-3 ">
+    <div class="container">
+        <h1 class="logo">
+            Checkout
+        </h1>
+        <div class="content">
+            <div class="subscribe">
+                <h5 class="info-text">
+                    <i>
+                        Awesome! Just 1 step away!
+                    </i>
+                </h5>
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 col-sm6-6 col-sm-offset-3 ">
 
-                            <!-- Set up a container element for the button -->
-                            <div id="paypal-button-container"></div>
-                            <!-- Include the PayPal JavaScript SDK -->
-                            <script src="https://www.paypal.com/sdk/js?client-id=AepAHC6vwsZ-or_rY0hggQ6-e-Rt_3mkiINDyUIq5akG2DZJIOjiVwJoYxfPgcmXeyytf0adbyGfqa8a&currency=EUR"></script>
+                        <!-- Set up a container element for the button -->
+                        <div id="paypal-button-container"></div>
+                        <!-- Include the PayPal JavaScript SDK -->
+                        <script src="https://www.paypal.com/sdk/js?client-id=AepAHC6vwsZ-or_rY0hggQ6-e-Rt_3mkiINDyUIq5akG2DZJIOjiVwJoYxfPgcmXeyytf0adbyGfqa8a&currency=EUR"></script>
 
-                            <script>
+                        <script>
 
-                                function getCookie(name) {
-                                    let cookieValue = null;
-                                    if (document.cookie && document.cookie !== '') {
-                                        const cookies = document.cookie.split(';');
-                                        for (let i = 0; i < cookies.length; i++) {
-                                            const cookie = cookies[i].trim();
-                                            // Does this cookie string begin with the name we want?
-                                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                                break;
-                                            }
+                            function getCookie(name) {
+                                let cookieValue = null;
+                                if (document.cookie && document.cookie !== '') {
+                                    const cookies = document.cookie.split(';');
+                                    for (let i = 0; i < cookies.length; i++) {
+                                        const cookie = cookies[i].trim();
+                                        // Does this cookie string begin with the name we want?
+                                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                            break;
                                         }
                                     }
-                                    return cookieValue;
                                 }
-                                const csrftoken = getCookie('csrftoken');
+                                return cookieValue;
+                            }
+                            const csrftoken = getCookie('csrftoken');
 
-                                var total = '{{ essay.price }}'
-                                var essay_id = '{{ essay.essay_id }}'
+                            var total = '{{ essay.price }}'
+                            var essay_id = '{{ essay.essay_id }}'
 
-                                function completePayment(){
-                                    var url = "{% url 'english:payment_success_backend' %}"
+                            function completePayment(){
+                                var url = "{% url 'english:payment_success_backend' %}"
 
-                                    fetch(url, {
-                                        method: 'POST',
-                                        headers:{
-                                            'Content-type':'appliction/json',
-                                            'X-CSRFToken': csrftoken,
-                                        },
-                                        body:JSON.stringify({'essay_id': essay_id})
-                                    })
-                                }
-
-                                // Render the PayPal button into #paypal-button-container
-                                paypal.Buttons({
-
-                                    // Set up the transaction
-                                    createOrder: function(data, actions) {
-                                        return actions.order.create({
-                                            purchase_units: [{
-                                                amount: {
-                                                    value: total
-                                                }
-                                            }]
-                                        });
+                                fetch(url, {
+                                    method: 'POST',
+                                    headers:{
+                                        'Content-type':'appliction/json',
+                                        'X-CSRFToken': csrftoken,
                                     },
+                                    body:JSON.stringify({'essay_id': essay_id})
+                                })
+                            }
 
-                                    // Finalize the transaction
-                                    onApprove: function(data, actions) {
-                                        return actions.order.capture().then(function(details) {
-                                            // Show a success message to the buyer
-                                            completePayment()
-                                            window.location.href = "{% url 'english:payment_result' essay.essay_id %}";
-                                        });
-                                    }
+                            // Render the PayPal button into #paypal-button-container
+                            paypal.Buttons({
+
+                                // Set up the transaction
+                                createOrder: function(data, actions) {
+                                    return actions.order.create({
+                                        purchase_units: [{
+                                            amount: {
+                                                value: total
+                                            }
+                                        }]
+                                    });
+                                },
+
+                                // Finalize the transaction
+                                onApprove: function(data, actions) {
+                                    return actions.order.capture().then(function(details) {
+                                        // Show a success message to the buyer
+                                        completePayment()
+                                        window.location.href = "{% url 'english:payment_result' essay.essay_id %}";
+                                    });
+                                }
 
 
-                                }).render('#paypal-button-container');
-                            </script>
-                        </div>
+                            }).render('#paypal-button-container');
+                        </script>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 </body>
    <script src="{% static 'english/assets/js/jquery-1.10.2.js' %}" type="text/javascript"></script>
