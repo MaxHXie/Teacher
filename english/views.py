@@ -41,5 +41,5 @@ def payment_result(request, essay_id):
         return render(request, 'english/payment_fail.html')
 
 def calc_price(characters):
-    price = 1 + characters / 300
+    price = 1 + characters / 200
     return round(float(price), 1)
