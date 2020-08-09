@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'essay.apps.EssayConfig',
     'english.apps.EnglishConfig',
+    'google_analytics',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'google_analytics.middleware.GoogleAnalyticsMiddleware',
 ]
 
 ROOT_URLCONF = 'teacher.urls'
@@ -101,6 +103,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+GOOGLE_ANALYTICS = {
+    'google_analytics_id': 'UA-174898480-1',
+}
+
+CELERY_IMPORTS = ('google_analytics.tasks')
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
