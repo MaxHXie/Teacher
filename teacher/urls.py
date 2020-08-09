@@ -17,8 +17,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 
 urlpatterns = [
-    path('essay/', include('essay.urls')),
-    path('english/', include('english.urls')),
+    path('', include('english.urls')),
     path('admin/', admin.site.urls),
     path('djga/', include('google_analytics.urls')),
 ]
