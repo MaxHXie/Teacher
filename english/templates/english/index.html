@@ -19,6 +19,11 @@
     <link href='http://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
 
 	<link rel="icon" href="{% static 'english/assets/images/logo.jpg' %}" type="image/gif" >
+
+	{% load google_analytics_tags %}
+	<div style="display:none">
+		<img src="{% google_analytics %}" width="0" height="0" />
+	</div>
 </head>
 
 <body>
