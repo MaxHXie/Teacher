@@ -20,7 +20,7 @@ def index(request):
     return render(request, 'english/index.html', {'form': form})
 
 def payment(request, essay):
-    essay_limit = 2
+    essay_limit = 10
     incomplete_essay_list = Essay.objects.filter(paid=True, completed=False)
     if len(incomplete_essay_list) >= essay_limit:
         form = EssayForm(request.POST)
