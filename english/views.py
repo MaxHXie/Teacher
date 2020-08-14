@@ -20,7 +20,13 @@ def index(request):
     return render(request, 'english/index.html', {'form': form})
 
 def payment(request, essay):
-    return render(request, 'english/payment.html', {'essay': essay})
+    essay_limit = 2
+    incomplete_essay_list = Essay.objects.filter(paid=True, completed=False)
+    if len(incomplete_essay_list) >= essay_limit:
+        form = EssayForm(request.POST)
+        return render(request, 'english/index.html', {'essay_limit': essay_limit, 'form': form})
+    else:
+        return render(request, 'english/payment.html', {'essay': essay})
 
 def payment_success_backend(request):
     body = json.loads(request.body)

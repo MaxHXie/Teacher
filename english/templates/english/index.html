@@ -113,12 +113,18 @@
                 <h5 class="info-text">
                     <i>
 					Take your essay to the next level. <br />
-					Essay correction and feedback made just for you, by real professionals.
+					Essay correction and feedback made just for you, by real professionals. <br />
+					<strong><u style="color:#BBFFBB;">Done within 48 hours!</u></strong>
                     </i>
                 </h5>
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2 col-sm6-6 col-sm-offset-3 ">
                         <form class="form-inline" role="form" action="" method="post">
+							{% if essay_limit %}
+								<span style="color:#FF5555;"><strong>Essay limit reached! We have too many other essays to correct at the moment, please try again later.</strong></span>
+							{% else %}
+								<span style="color:white;"> <strong>Hurry up! Limited number of essays get accepted.</strong></span>
+							{% endif %}
                           <div class="form-group">
                             {% csrf_token %}
                             {% for field in form.visible_fields %}
@@ -146,5 +152,9 @@
 </body>
     <script src="{% static 'english/assets/js/jquery-1.10.2.js' %}" type="text/javascript"></script>
 	<script src="{% static 'english/assets/js/bootstrap.min.js' %}" type="text/javascript"></script>
-
+	{% if essay_limit %}
+	<script>
+		alert("Essay limit reached. We cannot take care of your essay right now, please try again later.");
+	</script>
+	{% endif %}
 </html>
