@@ -24,6 +24,8 @@ def payment(request, essay):
     incomplete_essay_list = Essay.objects.filter(paid=True, completed=False)
     if len(incomplete_essay_list) >= essay_limit:
         form = EssayForm(request.POST)
+        essay.were_limited = True
+        essay.save()
         return render(request, 'english/index.html', {'essay_limit': essay_limit, 'form': form})
     else:
         return render(request, 'english/payment.html', {'essay': essay})
@@ -45,6 +47,9 @@ def payment_result(request, essay_id):
         return render(request, 'english/payment_success.html', {'essay': essay})
     else:
         return render(request, 'english/payment_fail.html')
+
+def terms_of_service(request):
+    return render(request, 'english/terms_of_service.html')
 
 def calc_price(characters):
     price = 1 + characters / 200

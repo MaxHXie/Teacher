@@ -12,9 +12,10 @@ class EssayAdmin(admin.ModelAdmin):
     'currency',
     'paid',
     'completed',
+    'were_limited',
     'essay_text',
     ]
-    list_display = ('essay_id', 'email', 'upload_datetime', 'characters', 'price', 'currency', 'paid', 'completed', 'shorter_essay_text')
+    list_display = ('essay_id', 'email', 'upload_datetime', 'characters', 'price', 'currency', 'paid', 'completed', 'were_limited', 'shorter_essay_text')
     readonly_fields = ['essay_id']
 
 admin.site.register(Essay, EssayAdmin)

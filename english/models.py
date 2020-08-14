@@ -10,9 +10,10 @@ class Essay(models.Model):
     upload_datetime = models.DateTimeField('date uploaded', default=timezone.now())
     characters = models.IntegerField(null=True)
     price = models.FloatField(null=True)
-    currency = models.CharField(max_length=32, default="SEK")
+    currency = models.CharField(max_length=32, default="EUR")
     paid = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
+    were_limited = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.essay_id)
