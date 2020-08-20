@@ -2,7 +2,8 @@ import json
 
 from django.http import JsonResponse
 from django.urls import reverse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from django.core.exceptions import ValidationError
 from .forms import EssayForm
 from .models import Essay
 
@@ -28,7 +29,22 @@ def payment(request, essay):
         essay.save()
         return render(request, 'english/index.html', {'essay_limit': essay_limit, 'form': form})
     else:
-        return render(request, 'english/payment.html', {'essay': essay})
+        return redirect('/checkout?essay_id=' + str(essay.essay_id))
+
+def checkout(request):
+    if request.method == "GET":
+        essay_id = request.GET.get('essay_id')
+        try:
+            essay = Essay.objects.get(pk=essay_id)
+            if essay.paid == True:
+                form = EssayForm()
+                return render(request, 'english/index.html', {'already_paid': True, 'form': form})
+            else:
+                return render(request, 'english/checkout.html', {'essay': essay})
+        except (ValidationError, Essay.DoesNotExist) as e:
+            return redirect('/')
+    else:
+        return redirect('/')
 
 def payment_success_backend(request):
     body = json.loads(request.body)
