@@ -337,8 +337,8 @@ h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
     vertical-align: middle;
 }
 .form-control.transparent{
-    background-color: rgba(255, 255, 255, 0.27);
-    border: 1px solid rgba(238, 238, 238, 0.55);
+    background-color: rgba(255, 255, 255, 0.50);
+    border: 1px solid rgba(238, 238, 238, 0.66);
     color: #FFFFFF;
 }
 .form-control.transparent:focus{
