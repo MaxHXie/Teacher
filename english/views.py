@@ -40,7 +40,8 @@ def checkout(request):
                 form = EssayForm()
                 return render(request, 'english/index.html', {'already_paid': True, 'form': form})
             else:
-                return render(request, 'english/checkout.html', {'essay': essay})
+                words = len(essay.essay_text.split())
+                return render(request, 'english/checkout.html', {'essay': essay, 'words': words})
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
     else:

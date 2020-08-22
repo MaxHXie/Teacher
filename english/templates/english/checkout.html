@@ -22,6 +22,7 @@
 	<div style="display:none">
 	    <img src="{% google_analytics %}" width="0" height="0" />
 	</div>
+	<link href='https://fonts.googleapis.com/css?family=Handlee' rel='stylesheet'>
 </head>
 
 <body>
@@ -95,7 +96,6 @@
 
 <!--    Change the image source '/images/restaurant.jpg')" with your favourite image.     -->
 
-
 <div class="cover black" data-color="black"></div>
 
 <!--   You can change the black color for the filter with those colors: blue, green, red, orange       -->
@@ -107,13 +107,19 @@
         <div class="content">
             <div class="subscribe">
                 <h5 class="info-text">
-						<strong>24 hour guarantee!</strong> <br />
-						Your essay will start be processed as soon as payment is completed, <br />
-						and will be sent back to your email within <strong>24 hours</strong>!
+						Your essay will be processed within <strong>24 hours</strong> after payment is completed. <br /><br />
+						Your essay has <u>{{ words }} words</u>.
                 </h5>
                 <div class="row">
-                    <div class="col-md-8 col-md-offset-2 col-sm6-6 col-sm-offset-3 ">
-						<h5 class="info-text"><i>Thank your for choosing ease-a! <br /> Please, choose your payment method below</i></h5>
+                    <div class="col-md-8 col-md-offset-0 col-sm6-4 col-sm-offset-1 ">
+						<div class="paper">
+						    <div class="paper-content">
+						        <textarea readonly>{{ essay.essay_text }}</textarea>
+						    </div>
+						</div>
+					</div>
+					<div class="col-md-4 col-md-offset-0 col-sm6-4 col-sm-offset-1 payment-choices-box">
+						<h5 class="info-text"><strong>Choose your payment method</strong></h5>
                         <!-- Set up a container element for the button -->
                         <div id="paypal-button-container"></div>
                         <!-- Include the PayPal JavaScript SDK -->
