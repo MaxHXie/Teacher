@@ -54,15 +54,17 @@ def payment_success_backend(request):
     essay.save()
     return JsonResponse('Payment completed!', safe=False)
 
-def payment_result(request, essay_id):
-    try:
-        essay = Essay.objects.get(pk=essay_id)
-    except Essay.DoesNotExist:
-        essay = None
-    if essay != None:
-        return render(request, 'english/payment_success.html', {'essay': essay})
-    else:
-        return render(request, 'english/payment_fail.html')
+def payment_result(request):
+    if request.method == "GET":
+        essay_id = request.GET.get('essay_id')
+        try:
+            essay = Essay.objects.get(pk=essay_id)
+            if essay.paid == True:
+                return render(request, 'english/payment_success.html', {'essay': essay})
+            else:
+                return redirect('/checkout?essay_id=' + str(essay.essay_id))
+        except (ValidationError, Essay.DoesNotExist) as e:
+            return redirect('/')
 
 def terms_of_service(request):
     return render(request, 'english/terms_of_service.html')

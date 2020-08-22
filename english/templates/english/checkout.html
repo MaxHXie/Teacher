@@ -173,7 +173,7 @@
                                     return actions.order.capture().then(function(details) {
                                         // Show a success message to the buyer
                                         completePayment()
-                                        window.location.href = "{% url 'english:payment_result' essay.essay_id %}";
+                                        window.location.href = "{% url 'english:payment_result' %}?essay_id={{ essay.essay_id }}";
                                     });
                                 }
 
