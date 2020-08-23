@@ -15,9 +15,9 @@ class EssayAdmin(admin.ModelAdmin):
     'were_limited',
     'essay_text',
     ]
-    list_display = ('essay_id', 'email', 'upload_datetime', 'characters', 'price', 'currency', 'paid', 'completed', 'were_limited', 'shorter_essay_text')
-    readonly_fields = ['essay_id']
 
+    list_display = ('essay_id', 'email', 'upload_datetime', 'characters', 'price', 'currency', 'paid', 'completed', 'were_limited', 'shorter_essay_text')
+    readonly_fields = ['essay_id', 'upload_datetime']
     ordering = ('-upload_datetime',)
 
 admin.site.register(Essay, EssayAdmin)
