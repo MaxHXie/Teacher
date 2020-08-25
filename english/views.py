@@ -71,5 +71,5 @@ def terms_of_service(request):
     return render(request, 'english/terms_of_service.html')
 
 def calc_price(characters):
-    price = 0.5 + characters / 300
+    price = 0.5 + characters / 400
     return round(float(price), 1)
