@@ -32,6 +32,24 @@ def submit(request, essay):
         response = requests.request("POST", url, data=payload, headers=headers)
         return response.text
 
+    essay.essay_correction_json = grammarbot(essay.essay_text.replace(" ", "%20"))
+    essay.errors = {'content': []}
+
+    # String adding function
+    for error in json.loads(essay.essay_correction_json)['matches']:
+        essay.errors['content'].append({
+            'offset': error['offset'],
+            'length': error['length'],
+            'error': essay.essay_text[error['offset']:error['offset']+error['length']],
+            'correction': error['replacements'][0]['value']
+        })
+
+    essay.save()
+
+    return redirect('/correction?essay_id=' + str(essay.essay_id))
+
+def correction(request):
+
     def add_strings(original, strings):
         parts = []
         start = 0
@@ -41,16 +59,6 @@ def submit(request, essay):
         parts += original[start:],
         return ''.join(parts)
 
-    essay.essay_correction_json = grammarbot(essay.essay_text.replace(" ", "%20"))
-    essay.essay_text = add_strings(essay.essay_text, json.loads(essay.essay_correction_json)['matches'])
-    essay.errors = {}
-    essay.corrections = {}
-
-    essay.save()
-
-    return redirect('/correction?essay_id=' + str(essay.essay_id))
-
-def correction(request):
     if request.method == "GET":
         essay_id = request.GET.get('essay_id')
         try:
