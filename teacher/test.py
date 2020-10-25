@@ -1,9 +1,8 @@
 import requests
-import json
 
 url = "https://grammarbot.p.rapidapi.com/check"
 
-payload = "language=en-US&text=Susan%20go%20to%20the%20store%20everyday.%20I%20like%20to%20go%20to%20store%20too%20everyday%20that%20is%20my%20favourite%20activity.%20Me%20and%20Bob%20are%20best%20friends%20that%20play%20baseball%20on%20the%20evenings%20but%20only%20on%20wensdays."
+payload = "language=en-US&text=I%20didn%E2%80%99t%20realise%20that%20I%20was%20alone%20every%20weekend%20and%20every%20day%20after%20school.%20I%20just%20kept%20following%20them%20wherever%20they%20went%20in%20school%20and%20if%20they%20were%20planning%20on%20hanging%20out%20right%20after%20school%20I%20tried%20my%20best%20to%20get%20in%20on%20the%20plans%2C%20because%20they%20weren't%20mean%20to%20me%20like%20that%2C%20they%20never%20said%20I%20couldn't%20come%20or%20that%20I%20had%20to%20go.%20They%20just%20didn't%20invite%20me%20and%20tried%20their%20best%20to%20avoid%20me."
 headers = {
     'x-rapidapi-host': "grammarbot.p.rapidapi.com",
     'x-rapidapi-key': "7968ecd538msh6231460df8f412ap1f8fe2jsn50cd990fd870",
@@ -13,10 +12,6 @@ headers = {
 response = requests.request("POST", url, data=payload, headers=headers)
 
 print(response.text)
-json_text = json.loads(response.text)
-
-print('-----------------------------------')
-print(json_text['software'])
 
 """
 

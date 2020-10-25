@@ -45,15 +45,19 @@ def submit(request, essay):
 
     # String adding function
     for error in json.loads(essay.essay_correction_json)['matches']:
-        try:
-            correction = error['replacements'][0]['value']
-        except IndexError:
-            correction = ""
+        # To offer support for multiple correction suggestions we need to store them as a dictionary
+        correction_dict = {"content": []}
+        for correction in error['replacements']:
+            correction_dict["content"].append(correction)
+            print(correction)
+
         essay.errors["content"].append({
             "offset": error['offset'],
             "length": error['length'],
+            "message": error['message'],
+            "type": error['shortMessage'],
             "error": essay.essay_text[error['offset']:error['offset']+error['length']],
-            "correction": correction
+            "correction": json.dumps(correction_dict)
         })
     essay.errors = json.dumps(essay.errors)
 
@@ -67,9 +71,28 @@ def correction(request):
         parts = []
         start = 0
         for error in errors:
-            parts += original[start:error['offset']], "<mark class='error'>"
+            corrections = json.loads(error['correction'])['content']
+            correction_text = ""
+            for i in range(len(corrections)):
+                #If there is only 1 correction, surround it with quotation marks
+                if len(corrections) == 1:
+                    correction_text = corrections[i]['value']
+                else:
+                    #If there are several, separate them with commas
+                    if i == 0:
+                        correction_text = "(" + corrections[i]['value'] + ", "
+                    elif i != len(corrections) - 1:
+                        correction_text = correction_text + corrections[i]['value'] + ', '
+                    else:
+                        correction_text = correction_text + corrections[i]['value'] + ")"
+            if error['type'] != '':
+                popover_header = error['type']
+            else:
+                popover_header = error['message']
+            the_string = "<u><a href='#' data-toggle='popover' title='{}' data-placement='top'><mark class='error'>".format(popover_header)
+            parts += original[start:error['offset']], the_string
             start = (error['offset'])
-            parts += original[start:(error['offset']+error['length'])], "</mark>" + "<mark class='correction'>" + error['correction'] + "</mark>"
+            parts += original[start:(error['offset']+error['length'])], "</mark></a></u><mark class='correction'>{}</mark>".format(correction_text)
             start = (error['offset']+error['length'])
         parts += original[start:],
         return ''.join(parts)
