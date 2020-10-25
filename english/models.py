@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 from django.template.defaultfilters import truncatechars  # or truncatewords
 import uuid
 
@@ -9,7 +8,6 @@ class Essay(models.Model):
     email = models.EmailField(null=True, blank=True)
     upload_datetime = models.DateTimeField('date uploaded', auto_now_add=True)
     characters = models.IntegerField(null=True)
-    completed = models.BooleanField(default=False)
     essay_correction_json = models.TextField(default= "", max_length=500000)
     errors = models.TextField(default= "", max_length=100000)
 

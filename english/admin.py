@@ -8,13 +8,12 @@ class EssayAdmin(admin.ModelAdmin):
     'email',
     'upload_datetime',
     'characters',
-    'completed',
     'essay_text',
     'essay_correction_json',
     'errors',
     ]
 
-    list_display = ('essay_id', 'email', 'upload_datetime', 'characters', 'completed', 'shorter_essay_text')
+    list_display = ('essay_id', 'email', 'upload_datetime', 'characters', 'shorter_essay_text')
     readonly_fields = ['essay_id', 'upload_datetime']
     ordering = ('-upload_datetime',)
 
