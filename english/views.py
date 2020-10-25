@@ -15,12 +15,12 @@ def index(request):
             essay.characters = len(essay.essay_text)
             essay.price = calc_price(essay.characters)
             essay.save()
-            return payment(request, essay)
+            return submit(request, essay)
     else:
         form = EssayForm()
     return render(request, 'english/index.html', {'form': form})
 
-def payment(request, essay):
+def submit(request, essay):
     essay_limit = 10
     incomplete_essay_list = Essay.objects.filter(paid=True, completed=False)
     if len(incomplete_essay_list) >= essay_limit:
