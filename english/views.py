@@ -1,4 +1,4 @@
-import json
+import json, requests
 
 from django.http import JsonResponse
 from django.urls import reverse
@@ -21,16 +21,23 @@ def index(request):
     return render(request, 'english/index.html', {'form': form})
 
 def submit(request, essay):
-    print(essay.essay_text)
-    essay_limit = 10
-    incomplete_essay_list = Essay.objects.filter(paid=True, completed=False)
-    if len(incomplete_essay_list) >= essay_limit:
-        form = EssayForm(request.POST)
-        essay.were_limited = True
-        essay.save()
-        return render(request, 'english/index.html', {'essay_limit': essay_limit, 'form': form})
-    else:
-        return redirect('/checkout?essay_id=' + str(essay.essay_id))
+    def grammarbot(essay_text):
+        url = "https://grammarbot.p.rapidapi.com/check"
+        payload = "language=en-US&text=" + essay_text
+        headers = {
+            'x-rapidapi-host': "grammarbot.p.rapidapi.com",
+            'x-rapidapi-key': "7968ecd538msh6231460df8f412ap1f8fe2jsn50cd990fd870",
+            'content-type': "application/x-www-form-urlencoded"
+            }
+        response = requests.request("POST", url, data=payload, headers=headers)
+        return response.text
+
+    essay_text = essay.essay_text.replace(" ", "%20")
+    response = grammarbot(essay_text)
+    essay.essay_correction_string = response
+    essay.save()
+
+    return redirect('/checkout?essay_id=' + str(essay.essay_id))
 
 def checkout(request):
     if request.method == "GET":
