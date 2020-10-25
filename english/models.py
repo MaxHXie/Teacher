@@ -15,6 +15,7 @@ class Essay(models.Model):
     completed = models.BooleanField(default=False)
     essay_correction_json = models.TextField(default= "", max_length=500000)
     errors = models.TextField(default= "", max_length=100000)
+    were_limited = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.essay_id)
