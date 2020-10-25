@@ -77,13 +77,14 @@ def correction(request):
                 if len(corrections) == 1:
                     correction_text = corrections[i]['value']
                 else:
-                    #If there are several, separate them with commas
+                    #If there are several, separate them with commas, use the variable i to set a limit on how many corrections should  be displayed
                     if i == 0:
                         correction_text = "(" + corrections[i]['value'] + ", "
-                    elif i != len(corrections) - 1:
+                    elif i != len(corrections) - 1 and i != 2:
                         correction_text = correction_text + corrections[i]['value'] + ', '
-                    else:
+                    elif i == len(corrections) - 1 or i == 2:
                         correction_text = correction_text + corrections[i]['value'] + ")"
+                        break
             if error['type'] != '':
                 popover_header = error['type']
             else:
@@ -91,7 +92,11 @@ def correction(request):
             the_string = "<u><a href='#' data-toggle='popover' title='{}' data-placement='top'><mark class='error'>".format(popover_header)
             parts += original[start:error['offset']], the_string
             start = (error['offset'])
-            parts += original[start:(error['offset']+error['length'])], "</mark></a></u><mark class='correction'>{}</mark>".format(correction_text)
+            if correction_text != "":
+                correction_mark = "<mark class='correction'>{}</mark>".format(correction_text)
+            else:
+                correction_mark = ""
+            parts += original[start:(error['offset']+error['length'])], "</mark></a></u>" + correction_mark
             start = (error['offset']+error['length'])
         parts += original[start:],
         return ''.join(parts)

@@ -5,3 +5,4 @@ english/__pycache__/views.cpython-36.pyc
 english/migrations/0027_auto_20201025_2102.py
 english/__pycache__/models.cpython-36.pyc
 english/__pycache__/admin.cpython-36.pyc
+english/migrations/0028_auto_20201025_2141.py
