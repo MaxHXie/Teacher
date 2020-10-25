@@ -12,6 +12,7 @@ def index(request):
         cleanr = re.compile('<.*?>')
         cleantext = re.sub(cleanr, '', raw_html)
         return cleantext
+
     if request.method == 'POST':
         form = EssayForm(request.POST)
         if form.is_valid():
@@ -28,7 +29,7 @@ def index(request):
 def submit(request, essay):
     def grammarbot(essay_text):
         url = "https://grammarbot.p.rapidapi.com/check"
-        payload = "language=en-US&text=" + essay_text
+        payload = ("language=en-US&text=" + essay_text).encode("utf-8")
         headers = {
             'x-rapidapi-host': "grammarbot.p.rapidapi.com",
             'x-rapidapi-key': "7968ecd538msh6231460df8f412ap1f8fe2jsn50cd990fd870",
@@ -40,13 +41,19 @@ def submit(request, essay):
     essay.essay_correction_json = grammarbot(essay.essay_text.replace(" ", "%20"))
     essay.errors = {"content": []}
 
+    print(essay.essay_correction_json)
+
     # String adding function
     for error in json.loads(essay.essay_correction_json)['matches']:
+        try:
+            correction = error['replacements'][0]['value']
+        except IndexError:
+            correction = ""
         essay.errors["content"].append({
             "offset": error['offset'],
             "length": error['length'],
             "error": essay.essay_text[error['offset']:error['offset']+error['length']],
-            "correction": error['replacements'][0]['value']
+            "correction": correction
         })
     essay.errors = json.dumps(essay.errors)
 
