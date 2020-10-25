@@ -1,4 +1,4 @@
-import json, requests, re, xmltodict
+import json, requests, re
 
 from django.http import JsonResponse
 from django.urls import reverse
