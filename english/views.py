@@ -1,4 +1,4 @@
-import json, requests, re
+import json, requests, re, xmltodict
 
 from django.http import JsonResponse
 from django.urls import reverse
@@ -26,7 +26,9 @@ def index(request):
     return render(request, 'english/index.html', {'form': form})
 
 def submit(request, essay):
+    # submit as many APIs as you want
     def grammarbot(essay_text):
+        essay_text = essay_text.replace(" ", "%20")
         url = "https://grammarbot.p.rapidapi.com/check"
         payload = ("language=en-US&text=" + essay_text).encode("utf-8")
         headers = {
@@ -37,27 +39,79 @@ def submit(request, essay):
         response = requests.request("POST", url, data=payload, headers=headers)
         return response.text
 
-    essay.essay_correction_json = grammarbot(essay.essay_text.replace(" ", "%20"))
-    essay.errors = {"content": []}
+    def language_tool(essay_text):
+        essay_text = essay_text.replace(" ", "%20")
+        url = "https://dnaber-languagetool.p.rapidapi.com/v2/check"
+        payload = ("text=" + essay_text + "&language=en-US").encode("utf-8")
+        headers = {
+            'x-rapidapi-host': "dnaber-languagetool.p.rapidapi.com",
+            'x-rapidapi-key': "7968ecd538msh6231460df8f412ap1f8fe2jsn50cd990fd870",
+            'content-type': "application/x-www-form-urlencoded"
+            }
+        response = requests.request("POST", url, data=payload, headers=headers)
+        return response.text
 
-    print(essay.essay_correction_json)
+    def web_spell_checker(essay_text):
+        url = "https://webspellchecker-webspellcheckernet.p.rapidapi.com/ssrv.cgi"
+        querystring = {"format":"json","cmd":"grammar_check","text":essay_text.encode('utf-8'),"slang":"en_US"}
+        headers = {
+            'x-rapidapi-host': "webspellchecker-webspellcheckernet.p.rapidapi.com",
+            'x-rapidapi-key': "7968ecd538msh6231460df8f412ap1f8fe2jsn50cd990fd870"
+        }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        return json.loads(response.text)[0]
+
+    def aggregate_errors(responses):
+        all_errors = []
+        for response in responses:
+            try:
+                all_errors = all_errors + json.loads(response)['matches']
+            except TypeError:
+                all_errors = all_errors + response['matches']
+        return all_errors
+
+    responses = []
+    apis = [grammarbot, language_tool, web_spell_checker]
+    for api in apis:
+        responses.append(api(essay.essay_text))
+    all_errors = aggregate_errors(responses)
+
+    essay.errors = {"content": []}
+    #make sure the same offset doesn't repeat
+    offsets = []
+    essay.essay_correction_json = responses
 
     # String adding function
-    for error in json.loads(essay.essay_correction_json)['matches']:
-        # To offer support for multiple correction suggestions we need to store them as a dictionary
-        correction_dict = {"content": []}
-        for correction in error['replacements']:
-            correction_dict["content"].append(correction)
-            print(correction)
+    for error in all_errors:
+        if error['offset'] not in offsets:
+            offsets.append(error['offset'])
+            # To offer support for multiple correction suggestions we need to store them as a dictionary
+            correction_dict = {"content": []}
+            #try different names of variables from different APIs
+            try:
+                corrections = error['replacements']
+            except KeyError:
+                corrections = error['suggestions']
+            try:
+                type = error['shortMessage']
+            except KeyError:
+                type = error['rule']['id']
 
-        essay.errors["content"].append({
-            "offset": error['offset'],
-            "length": error['length'],
-            "message": error['message'],
-            "type": error['shortMessage'],
-            "error": essay.essay_text[error['offset']:error['offset']+error['length']],
-            "correction": json.dumps(correction_dict)
-        })
+            for correction in corrections:
+                correction_dict["content"].append(correction)
+
+            essay.errors["content"].append({
+                "offset": error['offset'],
+                "length": error['length'],
+                "message": error['message'],
+                "type": type,
+                "error": essay.essay_text[error['offset']:error['offset']+error['length']],
+                "correction": json.dumps(correction_dict)
+            })
+        else:
+            pass
+
     essay.errors = json.dumps(essay.errors)
 
     essay.save()
@@ -74,16 +128,20 @@ def correction(request):
             correction_text = ""
             for i in range(len(corrections)):
                 #If there is only 1 correction, surround it with quotation marks
+                try:
+                    placeholder = corrections[i]['value']
+                except TypeError:
+                    placeholder = corrections[i]
                 if len(corrections) == 1:
-                    correction_text = corrections[i]['value']
+                    correction_text = placeholder
                 else:
                     #If there are several, separate them with commas, use the variable i to set a limit on how many corrections should  be displayed
                     if i == 0:
-                        correction_text = "(" + corrections[i]['value'] + ", "
+                        correction_text = "(" + placeholder + ", "
                     elif i != len(corrections) - 1 and i != 2:
-                        correction_text = correction_text + corrections[i]['value'] + ', '
+                        correction_text = correction_text + placeholder + ', '
                     elif i == len(corrections) - 1 or i == 2:
-                        correction_text = correction_text + corrections[i]['value'] + ")"
+                        correction_text = correction_text + placeholder + ")"
                         break
             if error['type'] != '':
                 popover_header = error['type']
