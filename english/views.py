@@ -19,7 +19,6 @@ def index(request):
             essay = form.save()
             essay.essay_text = cleanhtml(essay.essay_text)
             essay.characters = len(essay.essay_text)
-            essay.price = calc_price(essay.characters)
             essay.save()
             return submit(request, essay)
     else:
@@ -115,7 +114,6 @@ def payment_success_backend(request):
     body = json.loads(request.body)
     print("BODY", body)
     essay = get_object_or_404(Essay, pk=body['essay_id'])
-    essay.paid = True
     essay.save()
     return JsonResponse('Payment completed!', safe=False)
 
@@ -124,16 +122,9 @@ def payment_result(request):
         essay_id = request.GET.get('essay_id')
         try:
             essay = Essay.objects.get(pk=essay_id)
-            if essay.paid == True:
-                return render(request, 'english/payment_success.html', {'essay': essay})
-            else:
-                return redirect('/correction?essay_id=' + str(essay.essay_id))
+            return redirect('/correction?essay_id=' + str(essay.essay_id))
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
 
 def terms_of_service(request):
     return render(request, 'english/terms_of_service.html')
-
-def calc_price(characters):
-    price = 0.5 + characters / 400
-    return round(float(price), 1)
