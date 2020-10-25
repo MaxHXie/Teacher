@@ -32,9 +32,20 @@ def submit(request, essay):
         response = requests.request("POST", url, data=payload, headers=headers)
         return response.text
 
-    essay_text = essay.essay_text.replace(" ", "%20")
-    response = grammarbot(essay_text)
-    essay.essay_correction_string = response
+    def add_strings(original, strings):
+        parts = []
+        start = 0
+        for s in strings:
+            parts += original[start:(s['offset']+s['length'])], s['replacements'][0]['value']
+            start = (s['offset']+s['length'])
+        parts += original[start:],
+        return ''.join(parts)
+
+    essay.essay_correction_json = grammarbot(essay.essay_text.replace(" ", "%20"))
+    essay.essay_text = add_strings(essay.essay_text, json.loads(essay.essay_correction_json)['matches'])
+    essay.errors = {}
+    essay.corrections = {}
+
     essay.save()
 
     return redirect('/correction?essay_id=' + str(essay.essay_id))
@@ -44,7 +55,7 @@ def correction(request):
         essay_id = request.GET.get('essay_id')
         try:
             essay = Essay.objects.get(pk=essay_id)
-            essay_correction = json.loads(essay.essay_correction_string)
+            essay_correction = json.loads(essay.essay_correction_json)
             words = len(essay.essay_text.split())
             return render(request, 'english/correction.html', {'essay': essay, 'essay_correction': essay_correction, 'words': words})
         except (ValidationError, Essay.DoesNotExist) as e:

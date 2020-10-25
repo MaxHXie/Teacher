@@ -18,7 +18,6 @@ json_text = json.loads(response.text)
 print('-----------------------------------')
 print(json_text['software'])
 
-
 """
 
 {
