@@ -33,16 +33,17 @@ def submit(request, essay):
         return response.text
 
     essay.essay_correction_json = grammarbot(essay.essay_text.replace(" ", "%20"))
-    essay.errors = {'content': []}
+    essay.errors = {"content": []}
 
     # String adding function
     for error in json.loads(essay.essay_correction_json)['matches']:
-        essay.errors['content'].append({
-            'offset': error['offset'],
-            'length': error['length'],
-            'error': essay.essay_text[error['offset']:error['offset']+error['length']],
-            'correction': error['replacements'][0]['value']
+        essay.errors["content"].append({
+            "offset": error['offset'],
+            "length": error['length'],
+            "error": essay.essay_text[error['offset']:error['offset']+error['length']],
+            "correction": error['replacements'][0]['value']
         })
+    essay.errors = json.dumps(essay.errors)
 
     essay.save()
 
@@ -50,12 +51,14 @@ def submit(request, essay):
 
 def correction(request):
 
-    def add_strings(original, strings):
+    def add_strings(original, errors):
         parts = []
         start = 0
-        for s in strings:
-            parts += original[start:(s['offset']+s['length'])], s['replacements'][0]['value']
-            start = (s['offset']+s['length'])
+        for error in errors:
+            parts += original[start:error['offset']], "<mark class='error'>"
+            start = (error['offset'])
+            parts += original[start:(error['offset']+error['length'])], "</mark>" + "<mark class='correction'>" + error['correction'] + "</mark>"
+            start = (error['offset']+error['length'])
         parts += original[start:],
         return ''.join(parts)
 
@@ -63,9 +66,11 @@ def correction(request):
         essay_id = request.GET.get('essay_id')
         try:
             essay = Essay.objects.get(pk=essay_id)
-            essay_correction = json.loads(essay.essay_correction_json)
+            essay_text = essay.essay_text
+            essay_errors = json.loads(essay.errors)['content']
+            essay_html = add_strings(essay_text, essay_errors)
             words = len(essay.essay_text.split())
-            return render(request, 'english/correction.html', {'essay': essay, 'essay_correction': essay_correction, 'words': words})
+            return render(request, 'english/correction.html', {'essay': essay, 'essay_html': essay_html, 'words': words})
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
     else:

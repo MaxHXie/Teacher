@@ -115,12 +115,6 @@
     <div class="container">
         <h1 class="logo">
             Payment checkout
-			{% for error in essay_correction.matches %}
-				{{ error.replacements.0.value }}
-				{{ error.offset }}
-				{{ error.length }}
-				<br />
-			{% endfor %}
         </h1>
         <div class="content">
             <div class="subscribe">
@@ -132,7 +126,7 @@
                     <div class="col-md-8 col-md-offset-0 col-sm6-4 col-sm-offset-1 ">
 						<div class="paper">
 						    <div class="paper-content">
-						        <textarea readonly>{{ essay.essay_text }}</textarea>
+						        <textarea readonly>{% autoescape off %}{{ essay_html }}{% endautoescape %}</textarea>
 						    </div>
 						</div>
 					</div>
