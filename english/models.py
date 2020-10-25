@@ -13,7 +13,7 @@ class Essay(models.Model):
     currency = models.CharField(max_length=32, default="EUR")
     paid = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
-    essay_correction_string = models.TextField(max_length=500000)
+    essay_correction_string = models.TextField(default= "", max_length=500000)
     were_limited = models.BooleanField(default=False)
 
     def __str__(self):

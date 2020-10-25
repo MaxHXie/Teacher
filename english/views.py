@@ -37,19 +37,16 @@ def submit(request, essay):
     essay.essay_correction_string = response
     essay.save()
 
-    return redirect('/checkout?essay_id=' + str(essay.essay_id))
+    return redirect('/correction?essay_id=' + str(essay.essay_id))
 
-def checkout(request):
+def correction(request):
     if request.method == "GET":
         essay_id = request.GET.get('essay_id')
         try:
             essay = Essay.objects.get(pk=essay_id)
-            if essay.paid == True:
-                form = EssayForm()
-                return render(request, 'english/index.html', {'already_paid': True, 'form': form})
-            else:
-                words = len(essay.essay_text.split())
-                return render(request, 'english/checkout.html', {'essay': essay, 'words': words})
+            essay_correction = json.loads(essay.essay_correction_string)
+            words = len(essay.essay_text.split())
+            return render(request, 'english/correction.html', {'essay': essay, 'essay_correction': essay_correction, 'words': words})
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
     else:
@@ -71,7 +68,7 @@ def payment_result(request):
             if essay.paid == True:
                 return render(request, 'english/payment_success.html', {'essay': essay})
             else:
-                return redirect('/checkout?essay_id=' + str(essay.essay_id))
+                return redirect('/correction?essay_id=' + str(essay.essay_id))
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
 
