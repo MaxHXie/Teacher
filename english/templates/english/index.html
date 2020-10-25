@@ -122,18 +122,9 @@
 
         <div class="content">
             <div class="subscribe">
-                <h5 class="info-text">
-					We make your essay perfect, corrected by real professionals. <br /><br />
-					<u style="color:#BBFFBB;">Sent back to your inbox within <strong>24 hours</strong> of payment!</u>
-                </h5>
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2 col-sm6-6 col-sm-offset-3 ">
                         <form class="form-inline" role="form" action="" method="post">
-							{% if essay_limit %}
-								<span style="color:#FF5555;"><strong>Essay limit reached! We have too many other essays to correct at the moment, please try again later.</strong></span>
-							{% else %}
-								<span style="color:#ffaaaa;"> <strong>Hurry up! Just a few spots left!</strong></span>
-							{% endif %}
 							{% if already_paid %}
 								<br />
 								<span style="color:#FF5555;"><strong>The essay your tried to access has already been paid!</strong></span>
@@ -154,7 +145,6 @@
                           </div>
                           <button style="width:100%;" type="submit" class="btn btn-warning btn-fill">Send it!</button>
                         </form>
-						<span style="color:gray;">By proceeding, you are agreeing and consenting to our website's <a href="{% url 'english:terms_of_service' %}" target="_blank">terms of service</a>.</span>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import json, requests
+import json, requests, re
 
 from django.http import JsonResponse
 from django.urls import reverse
@@ -8,10 +8,15 @@ from .forms import EssayForm
 from .models import Essay
 
 def index(request):
+    def cleanhtml(raw_html):
+        cleanr = re.compile('<.*?>')
+        cleantext = re.sub(cleanr, '', raw_html)
+        return cleantext
     if request.method == 'POST':
         form = EssayForm(request.POST)
         if form.is_valid():
             essay = form.save()
+            essay.essay_text = cleanhtml(essay.essay_text)
             essay.characters = len(essay.essay_text)
             essay.price = calc_price(essay.characters)
             essay.save()
