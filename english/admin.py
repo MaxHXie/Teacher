@@ -16,7 +16,6 @@ class EssayAdmin(admin.ModelAdmin):
     'essay_text',
     'essay_correction_json',
     'errors',
-    'corrections'
     ]
 
     list_display = ('essay_id', 'email', 'upload_datetime', 'characters', 'price', 'currency', 'paid', 'completed', 'were_limited', 'shorter_essay_text')
