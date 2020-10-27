@@ -220,7 +220,7 @@ def submit(request, essay):
         return response_formatted
 
     all_errors = []
-    for api in [azure_spellcheck, grammarbot, language_tool, web_spell_checker]:
+    for api in [azure_spellcheck, language_tool, web_spell_checker, grammarbot]:
         all_errors = all_errors + api(essay.essay_text)
 
     essay.errors = {"content": []}
