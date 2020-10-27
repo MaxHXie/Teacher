@@ -29,39 +29,7 @@ def submit(request, essay):
 
     # submit as many APIs as you want
     # format api responses to be in this format
-    """
-    {
-        "errors" :
-        [
-            {
-                "offset": 353,
-                "length": 12,
-                "message": "This word is a possibel misspelling",
-                "type": "Misspelling"
-                "error": "flexibly",
-                "correction": [
-                    "flexible",
-                    "flexibility",
-                    "flexibale"
-                ]
-            }
-        ],
-        [
-            {
-                "offset": 353,
-                "length": 12,
-                "message": "This word is a possibel misspelling",
-                "type": "Misspelling"
-                "error": "flexibly",
-                "correction": [
-                    "flexible",
-                    "flexibility",
-                    "flexibale"
-                ]
-            }
-        ]
-    }
-    """
+
     def azure_spellcheck(essay_text):
         api_key = "48603fa402a041f9926e5962fbc3fd80"
 
@@ -93,6 +61,7 @@ def submit(request, essay):
                     corrections.append(i["suggestion"])
 
                 error_dict = {
+                    "api" : "azure",
                     "offset" : error["offset"],
                     "length" : len(error["token"]),
                     "message" : error_type,
@@ -130,6 +99,7 @@ def submit(request, essay):
                     corrections.append(i["value"])
 
                 error_dict = {
+                    "api" : "grammarbot",
                     "offset" : error["offset"],
                     "length" : error["length"],
                     "message" : error["shortMessage"],
@@ -167,6 +137,7 @@ def submit(request, essay):
                     corrections.append(i["value"])
 
                 error_dict = {
+                    "api" : "language_tool",
                     "offset" : error["offset"],
                     "length" : error["length"],
                     "message" : error["shortMessage"],
@@ -203,6 +174,7 @@ def submit(request, essay):
                     corrections.append(correction)
 
                 error_dict = {
+                    "api" : "web_spell_checker",
                     "offset" : error["offset"],
                     "length" : error["length"],
                     "message" : error["message"],
@@ -220,7 +192,7 @@ def submit(request, essay):
         return response_formatted
 
     all_errors = []
-    for api in [azure_spellcheck, language_tool, web_spell_checker, grammarbot]:
+    for api in [azure_spellcheck, language_tool, grammarbot, web_spell_checker]:
         all_errors = all_errors + api(essay.essay_text)
 
     essay.errors = {"content": []}
@@ -234,6 +206,7 @@ def submit(request, essay):
             # To offer support for multiple correction suggestions we need to store them as a dictionary
 
             essay.errors["content"].append({
+                "api" : error['api'],
                 "offset": error['offset'],
                 "length": error['length'],
                 "message": error['message'],
