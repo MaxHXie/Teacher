@@ -118,13 +118,12 @@ def submit(request, essay):
 
     def language_tool(essay_text):
         essay_text = essay_text.replace(" ", "%20")
-        url = "https://dnaber-languagetool.p.rapidapi.com/v2/check"
-        payload = ("text=" + essay_text + "&language=en-US").encode("utf-8")
+        url = "https://api.languagetoolplus.com/v2/check"
+        payload = ("text=" + essay_text + "&language=en-US&username=maxhxie%40gmail.com&apiKey=7bb0788f2887ee3d&enabledOnly=false").encode("utf-8")
         headers = {
-            'x-rapidapi-host': "dnaber-languagetool.p.rapidapi.com",
-            'x-rapidapi-key': "7968ecd538msh6231460df8f412ap1f8fe2jsn50cd990fd870",
-            'content-type': "application/x-www-form-urlencoded"
-            }
+            'content-type': "application/x-www-form-urlencoded",
+            'accept': "application/json"
+        }
         response = requests.request("POST", url, data=payload, headers=headers).json()
 
         #Make sure all errors from all APIs get the same format
@@ -192,7 +191,7 @@ def submit(request, essay):
         return response_formatted
 
     all_errors = []
-    for api in [azure_spellcheck, language_tool, grammarbot, web_spell_checker]:
+    for api in [language_tool, azure_spellcheck]:
         all_errors = all_errors + api(essay.essay_text)
 
     essay.errors = {"content": []}
@@ -232,7 +231,6 @@ def correction(request):
         errors = sorted(errors, key = lambda i: i['offset'])
 
         for error in errors:
-            print(error['offset'])
             corrections = error['corrections']
             correction_text = ""
             for i in range(len(corrections)):
@@ -249,10 +247,10 @@ def correction(request):
                     elif i == len(corrections) - 1 or i == 2:
                         correction_text = correction_text + placeholder + ")"
                         break
-            if error['type'] != '':
-                popover_header = error['type']
-            else:
+            if error['message'] != '':
                 popover_header = error['message']
+            else:
+                popover_header = error['type']
             the_string = "<u><a href='#' data-toggle='popover' title='{}' data-placement='top'><mark class='error'>".format(popover_header)
             parts += original[start:error['offset']], the_string
             start = (error['offset'])

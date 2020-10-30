@@ -98,7 +98,6 @@ headers = {
 response = requests.request("GET", url, headers=headers, params=querystring).json()
 print(json.dumps(response, indent=4))
 
-"""
 
 import requests, json
 
@@ -116,3 +115,19 @@ headers = {
 response = requests.request("GET", url, headers=headers, params=querystring)
 
 print(json.dumps(json.loads(requests.request("GET", url, headers=headers, params=querystring).text)[0], indent=4))
+"""
+
+import requests, json
+
+def language_tool(essay_text):
+    essay_text = essay_text.replace(" ", "%20")
+    url = "https://api.languagetoolplus.com/v2/check"
+    payload = ("text=" + essay_text + "&language=en-US&username=maxhxie%40gmail.com&apiKey=7bb0788f2887ee3d&enabledOnly=false").encode("utf-8")
+    headers = {
+        'content-type': "application/x-www-form-urlencoded",
+        'accept': "application/json"
+        }
+    response = requests.request("POST", url, data=payload, headers=headers).json()
+    print(json.dumps(response, indent=4))
+
+language_tool('hllo world are you doing ok or nt?')
