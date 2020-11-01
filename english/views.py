@@ -13,30 +13,38 @@ def index(request):
         cleantext = re.sub(cleanr, '', raw_html)
         return cleantext
 
+    try:
+        selected_lang = {'flag' : request.GET['flag'], 'lang' : request.GET['lang'], 'lang_id' : request.GET['lang_id']}
+    except:
+        selected_lang = {'flag' : 'US', 'lang' : 'English(US)', 'lang_id': 'en-US'}
+
     if request.method == 'POST':
         form = EssayForm(request.POST)
         if form.is_valid():
             essay = form.save()
             essay.essay_text = cleanhtml(essay.essay_text)
             essay.characters = len(essay.essay_text)
+            lang_id = selected_lang['lang_id']
+            essay.language = lang_id
             essay.save()
-            return submit(request, essay)
+            return submit(request, essay, lang_id)
+
     else:
         form = EssayForm()
-    return render(request, 'english/index.html', {'form': form})
+    return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang})
 
-def submit(request, essay):
+def submit(request, essay, lang_id):
 
     # submit as many APIs as you want
     # format api responses to be in this format
 
-    def azure_spellcheck(essay_text):
+    def azure_spellcheck(essay_text, lang_id):
         api_key = "48603fa402a041f9926e5962fbc3fd80"
 
         endpoint = "https://api.cognitive.microsoft.com/bing/v7.0/SpellCheck"
         data = {'text': essay_text}
         params = {
-            'mkt':'en-us',
+            'mkt':lang_id,
             'mode':'proof'
             }
         headers = {
@@ -78,10 +86,10 @@ def submit(request, essay):
 
         return response_formatted
 
-    def grammarbot(essay_text):
+    def grammarbot(essay_text, lang_id):
         essay_text = essay_text.replace(" ", "%20")
         url = "https://grammarbot.p.rapidapi.com/check"
-        payload = ("language=en-US&text=" + essay_text).encode("utf-8")
+        payload = ("language=" + lang_id + "&text=" + essay_text).encode("utf-8")
         headers = {
             'x-rapidapi-host': "grammarbot.p.rapidapi.com",
             'x-rapidapi-key': "7968ecd538msh6231460df8f412ap1f8fe2jsn50cd990fd870",
@@ -116,10 +124,10 @@ def submit(request, essay):
 
         return response_formatted
 
-    def language_tool(essay_text):
+    def language_tool(essay_text, lang_id):
         essay_text = essay_text.replace(" ", "%20")
         url = "https://api.languagetoolplus.com/v2/check"
-        payload = ("text=" + essay_text + "&language=en-US&username=maxhxie%40gmail.com&apiKey=7bb0788f2887ee3d&enabledOnly=false").encode("utf-8")
+        payload = ("text=" + essay_text + "&language=" + lang_id + "&username=maxhxie%40gmail.com&apiKey=7bb0788f2887ee3d&enabledOnly=false").encode("utf-8")
         headers = {
             'content-type': "application/x-www-form-urlencoded",
             'accept': "application/json"
@@ -153,46 +161,9 @@ def submit(request, essay):
 
         return response_formatted
 
-    def web_spell_checker(essay_text):
-        url = "https://webspellchecker-webspellcheckernet.p.rapidapi.com/ssrv.cgi"
-        querystring = {"format":"json","cmd":"grammar_check","text":essay_text.encode('utf-8'),"slang":"en_US"}
-        headers = {
-            'x-rapidapi-host': "webspellchecker-webspellcheckernet.p.rapidapi.com",
-            'x-rapidapi-key': "7968ecd538msh6231460df8f412ap1f8fe2jsn50cd990fd870"
-        }
-
-        response = json.loads(requests.request("GET", url, headers=headers, params=querystring).text)[0]
-
-        #Make sure all errors from all APIs get the same format
-
-        response_formatted = []
-        try:
-            for error in response['matches']:
-                corrections = []
-                for correction in error["suggestions"]:
-                    corrections.append(correction)
-
-                error_dict = {
-                    "api" : "web_spell_checker",
-                    "offset" : error["offset"],
-                    "length" : error["length"],
-                    "message" : error["message"],
-                    "type" : error["rule"]["category"],
-                    "error" : essay_text[error["offset"]:error["offset"]+error["length"]],
-                    "corrections" : corrections
-                }
-
-            response_formatted.append(error_dict)
-
-        except KeyError:
-            print('[ERROR] Web Spell Checker API call')
-            print(json.dumps(response, indent=4))
-
-        return response_formatted
-
     all_errors = []
-    for api in [language_tool, azure_spellcheck]:
-        all_errors = all_errors + api(essay.essay_text)
+    for api in [language_tool]:
+        all_errors = all_errors + api(essay.essay_text, lang_id)
 
     essay.errors = {"content": []}
     #make sure the same offset doesn't repeat
