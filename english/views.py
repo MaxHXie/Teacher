@@ -229,11 +229,11 @@ def correction(request):
         start = 0
 
         errors = sorted(errors, key = lambda i: i['offset'])
-        error_types = {'total' : 0, 'style' : 0, 'grammar' : 0, 'typographical' : 0, 'misspelling' : 0}
+        error_types = {'total' : 0, 'style' : 0, 'grammar' : 0, 'typographical' : 0, 'misspelling' : 0, 'whitespace': 0, 'uncategorized': 0, 'non_conformance': 0}
 
         for error in errors:
             # count the number of errors
-            error_types[error['type']] += 1
+            error_types[error['type'].replace('-', '_')] += 1
             error_types['total'] += 1
             corrections = error['corrections']
             correction_text = ""

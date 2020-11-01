@@ -125,6 +125,27 @@
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2 col-sm6-6 col-sm-offset-3 ">
                         <form class="form-inline" role="form" action="" method="post">
+							<ul class="nav navbar-nav">
+								<li class="dropdown">
+						              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+						                <img src="{% static 'english/assets/images/flags/US.png' %}">
+						                English(US)
+						                <b class="caret"></b>
+						              </a>
+						              <ul class="dropdown-menu">
+						                <li><a href="#"><img src="{% static 'english/assets/images/flags/DE.png' %}"/> Deutsch</a></li>
+						                <li><a href="#"><img src="{% static 'english/assets/images/flags/GB.png' %}"/> English(UK)</a></li>
+						                <li><a href="#"><img src="{% static 'english/assets/images/flags/FR.png' %}"/> Français</a></li>
+						                <li><a href="#"><img src="{% static 'english/assets/images/flags/RO.png' %}"/> Română</a></li>
+						                <li><a href="#"><img src="{% static 'english/assets/images/flags/IT.png' %}"/> Italiano</a></li>
+						                <li><a href="#"><img src="{% static 'english/assets/images/flags/ES.png' %}"/> Español</a></li>
+						                <li><a href="#"><img src="{% static 'english/assets/images/flags/BR.png' %}"/> Português</a></li>
+						                <li><a href="#"><img src="{% static 'english/assets/images/flags/JP.png' %}"/> 日本語</a></li>
+						                <li><a href="#"><img src="{% static 'english/assets/images/flags/TR.png' %}"/> Türkçe</a></li>
+
+						              </ul>
+						        </li>
+							</ul>
 							{% if already_paid %}
 								<br />
 								<span style="color:#FF5555;"><strong>The essay your tried to access has already been paid!</strong></span>
