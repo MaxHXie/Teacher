@@ -752,12 +752,12 @@ h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
     color: #FFFFFF;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.33);
     text-align: center;
-    margin-top: 50px;
+    margin-top: 20px;
 
 }
 .main .subscribe .info-text{
     font-size: 18px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 #video_background {
     position: fixed;
@@ -1006,9 +1006,18 @@ mark.correction{
   font-size: 19px;
   letter-spacing: 1px;
   word-spacing: 5px;
-.payment-choices-box {
+}
+
+.error-types-box{
     background-color:rgba(150,150,150,0.6);
     border-radius:10px;
-    padding-top:1px;
-    padding-bottom:1px;"
+    padding:15px;
+    margin: 50px auto 30px auto;
+}
+
+.correction-side-box{
+    background-color:rgba(150,150,150,0.6);
+    border-radius:10px;
+    padding:15px;
+    margin-bottom: 30px;
 }
