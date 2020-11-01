@@ -8,13 +8,17 @@ from .forms import EssayForm
 from .models import Essay
 
 def index(request):
+    flags = {'en-US' : 'US', 'es' : 'ES', 'fr' : 'FR', 'de' : 'DE', 'it' : 'IT', 'pt' : 'PT', 'sv' : 'SE'}
+    languages = {'en-US' : 'English', 'es' : 'Español', 'fr' : 'Français', 'de' : 'Deutsch', 'it' : 'Italiano', 'pt' : 'Português', 'sv' : 'svenska'}
+
     def cleanhtml(raw_html):
         cleanr = re.compile('<.*?>')
         cleantext = re.sub(cleanr, '', raw_html)
         return cleantext
 
     try:
-        selected_lang = {'flag' : request.GET['flag'], 'lang' : request.GET['lang'], 'lang_id' : request.GET['lang_id']}
+        lang_id = request.GET['lang_id']
+        selected_lang = {'flag' : flags[lang_id], 'lang' : languages[lang_id], 'lang_id' : lang_id}
     except:
         selected_lang = {'flag' : 'US', 'lang' : 'English(US)', 'lang_id': 'en-US'}
 
@@ -200,7 +204,7 @@ def correction(request):
         start = 0
 
         errors = sorted(errors, key = lambda i: i['offset'])
-        error_types = {'total' : 0, 'style' : 0, 'grammar' : 0, 'typographical' : 0, 'misspelling' : 0, 'whitespace': 0, 'register': 0, 'uncategorized': 0, 'non_conformance': 0}
+        error_types = {'total' : 0, 'style' : 0, 'grammar' : 0, 'typographical' : 0, 'misspelling' : 0, 'formatting' : 0, 'duplication' : 0, 'whitespace': 0, 'register': 0, 'uncategorized': 0, 'non_conformance': 0}
 
         for error in errors:
             # count the number of errors

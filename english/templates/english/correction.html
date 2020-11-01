@@ -135,6 +135,8 @@
 							{% if error_types.misspelling > 0 %}{{ error_types.misspelling }} Misspellings <br /> {% endif %}
 							{% if error_types.grammar > 0 %}{{ error_types.grammar }} Grammar <br /> {% endif %}
 							{% if error_types.typographical > 0 %}{{ error_types.typographical }} Typographical <br /> {% endif %}
+							{% if error_types.formatting > 0 %}{{ error_types.formatting }} Formatting <br /> {% endif %}
+							{% if error_types.duplication > 0 %}{{ error_types.duplication }} Redundant <br /> {% endif %}
 							{% if error_types.style > 0 %}{{ error_types.style }} Stylistic <br /> {% endif %}
 							{% if error_types.whitespace > 0 %}{{ error_types.whitespace }} Whitespace <br /> {% endif %}
 							{% if error_types.non_conformance > 0 %}{{ error_types.non_conformance }} Non-conformance <br /> {% endif %}
