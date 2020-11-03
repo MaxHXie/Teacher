@@ -9,7 +9,7 @@ from .models import Essay
 
 def index(request):
     flags = {'en-US' : 'US', 'es' : 'ES', 'fr' : 'FR', 'de' : 'DE', 'it' : 'IT', 'pt' : 'PT', 'sv' : 'SE'}
-    languages = {'en-US' : 'English', 'es' : 'Español', 'fr' : 'Français', 'de' : 'Deutsch', 'it' : 'Italiano', 'pt' : 'Português', 'sv' : 'svenska'}
+    languages = {'en-US' : 'English', 'es' : 'Español', 'fr' : 'Français', 'de' : 'Deutsch', 'it' : 'Italiano', 'pt' : 'Português', 'sv' : 'Svenska'}
 
     def cleanhtml(raw_html):
         cleanr = re.compile('<.*?>')
