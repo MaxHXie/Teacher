@@ -17,19 +17,19 @@ body{
 
 }
 .form-control::-moz-placeholder{
-   color: #DDDDDD;
+   color: #555555;
    opacity: 1;
 }
 .form-control:-moz-placeholder{
-   color: #DDDDDD;
+   color: #555555;
    opacity: 1;
 }
 .form-control::-webkit-input-placeholder{
-   color: #DDDDDD;
+   color: #555555;
    opacity: 1;
 }
 .form-control:-ms-input-placeholder{
-   color: #DDDDDD;
+   color: #555555;
    opacity: 1;
 }
 /*     General overwrite     */
@@ -1009,14 +1009,14 @@ mark.correction{
 }
 
 .error-types-box{
-    background-color:rgba(150,150,150,0.6);
+    background-color:rgba(140,140,160,0.8);
     border-radius:10px;
     padding:15px;
     margin: 50px auto 30px auto;
 }
 
 .login-box{
-    background-color:rgba(170,210,170,0.6);
+    background-color:rgba(145,160,145,0.8);
     border-radius:10px;
     padding:15px;
     margin-bottom: 30px;

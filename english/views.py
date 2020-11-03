@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ValidationError
-from .forms import EssayForm
+from .forms import EssayForm, CustomLoginForm
 from .models import Essay
 
 def index(request):
@@ -250,7 +250,8 @@ def correction(request):
             essay_errors = json.loads(essay.errors)['content']
             essay_html, error_types = config_errors(essay_text, essay_errors)
             words = len(essay.essay_text.split())
-            return render(request, 'english/correction.html', {'essay': essay, 'error_types': error_types, 'essay_html': essay_html, 'words': words})
+            form = CustomLoginForm()
+            return render(request, 'english/correction.html', {'essay': essay, 'error_types': error_types, 'essay_html': essay_html, 'words': words, 'form': form})
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
     else:

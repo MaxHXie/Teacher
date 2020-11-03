@@ -6,15 +6,38 @@
 {% if provider.id == "openid" %}
 {% for brand in provider.get_brands %}
 <li>
-  <a title="{{brand.name}}" 
-     class="socialaccount_provider {{provider.id}} {{brand.id}}" 
+  <a title="{{brand.name}}"
+     class="socialaccount_provider {{provider.id}} {{brand.id}}"
      href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
      >{{brand.name}}</a>
 </li>
 {% endfor %}
-{% endif %}
+{% elif provider.id == "google" %}
+<script>
+  function onSuccess(googleUser) {
+    console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+  }
+  function onFailure(error) {
+    console.log(error);
+  }
+  function renderButton() {
+    gapi.signin2.render('my-signin2', {
+      'scope': 'profile email',
+      'width': 240,
+      'height': 50,
+      'longtitle': true,
+      'theme': 'dark',
+      'onsuccess': onSuccess,
+      'onfailure': onFailure
+    });
+  }
+</script>
+
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+{% else %}
 <li>
-  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
+  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}"
      href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
 </li>
+{% endif %}
 {% endfor %}
