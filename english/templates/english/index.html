@@ -15,7 +15,7 @@
 	<link href="{% static 'english/assets/css/coming-sssoon.css' %}" rel="stylesheet" />
 
     <!--     Fonts     -->
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
 
 	<link rel="icon" href="{% static 'english/assets/images/logo.jpg' %}" type="image/gif" >
@@ -39,6 +39,78 @@
 </head>
 
 <body>
+
+	<nav class="navbar navbar-transparent navbar-fixed-top" role="navigation">
+	  <div class="container">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
+	    </div>
+
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+	           <li>
+				 	<a href="/"> <span class="logo cursive" style="font-size:2em;">ease-a</span> </a>
+	          </li>
+
+	        </ul>
+			{% if user.username %}
+			<ul class="nav navbar-nav navbar-right">
+				  <li>
+					  <a href="#">
+						  <i class="fa fa-check"></i>
+						  Get expert help (coming soon)
+					  </a>
+				  </li>
+				   <li>
+					  <a href="/profile">
+						<i class="fa fa-user-circle"></i>
+			  			Profile
+					  </a>
+				  </li>
+				  <li>
+					  <a href="/accounts/logout">
+						  Logout
+						  <i class="fa fa-sign-out"></i>
+					  </a>
+				  </li>
+			 </ul>
+			{% else %}
+		      <ul class="nav navbar-nav navbar-right">
+		            <li>
+		                <a href="#">
+		                    <i class="fa fa-check"></i>
+		                    Ask an expert (coming soon)
+		                </a>
+		            </li>
+		             <li>
+		                <a href="/accounts/login">
+		                    <i class="fa fa-sign-in"></i>
+		                    Login
+		                </a>
+		            </li>
+		             <li>
+		                <a style="background-color:white; border-radius: 8px;" href="/accounts/signup">
+							<span style="color:rgb(0,104,208);">
+								<i class="fa fa-rocket"></i>
+								<strong>
+				                    Sign up
+								</strong>
+							</span>
+		                </a>
+		            </li>
+		       </ul>
+			   {% endif %}
+
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container -->
+	</nav>
 <!-- Brand and toggle get grouped for better mobile display -->
 <!--
 <nav class="navbar navbar-transparent navbar-fixed-top" role="navigation">
@@ -106,14 +178,15 @@
 -->
 <div class="main" style="background-image: url('{% static 'english/assets/images/blue_fade_background.jpg' %}')">
 
+
 <!--    Change the image source '/images/restaurant.jpg')" with your favourite image.     -->
 
 <!--   You can change the black color for the filter with those colors: blue, green, red, orange       -->
 
     <div class="container">
-        <h1 class="logo cursive">
+        <span style="opacity:0;" class="logo cursive">
             ease-a
-        </h1>
+        </span>
 <!--  H1 can have 2 designs: "logo" and "logo cursive"           -->
 
         <div class="content">

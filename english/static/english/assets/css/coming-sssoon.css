@@ -408,7 +408,7 @@ h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
 .navbar-transparent .navbar-nav > li > a, [class*="navbar-ct"] .navbar-nav > li > a{
     color: #FFFFFF;
     border-color: #FFFFFF;
-    opacity: 0.7;
+    opacity: 0.85;
 }
 .navbar-transparent .navbar-brand:hover, .navbar-transparent .navbar-brand:focus, [class*="navbar-ct"] .navbar-brand:hover, [class*="navbar-ct"] .navbar-brand:focus {
     background-color: rgba(0, 0, 0, 0);
@@ -630,7 +630,7 @@ h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
 @media (max-width: 768px){
     .navbar-transparent{
         padding-top: 0px;
-        background-color: rgba(0, 0, 0, 0.75);
+        background-color: rgba(60, 30, 30, 0.75);
     }
     .navbar-transparent .navbar-collapse.in .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-transparent .navbar-collapse.in .navbar-nav .open .dropdown-menu > li > a:focus, .navbar-transparent .dropdown-menu > li > a:hover, .navbar-transparent .dropdown-menu > li > a:focus, [class*="navbar-ct"] .dropdown-menu > li > a:hover, [class*="navbar-ct"] .dropdown-menu > li > a:focus{
         color: #FFFFFF;
