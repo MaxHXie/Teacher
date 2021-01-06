@@ -145,7 +145,17 @@
 						</span>
 					</div>
 
+					{% if user.username %}
+
 					<div class="col-md-4 col-md-offset-0 col-sm6-4 col-sm-offset-1 login-box">
+
+						<h5 class="info-text"><strong>Your essay has been saved!</strong></h5>
+						<a href="/profile">Click here to see your essays</a> <br />
+
+					</div>
+					{% else %}
+					<div class="col-md-4 col-md-offset-0 col-sm6-4 col-sm-offset-1 login-box">
+
 						<h5 class="info-text"><strong>Log in to save your essay</strong></h5>
 						<script>
 						  function onSuccess(googleUser) {
@@ -179,6 +189,14 @@
 						  <a href="{% url 'account_reset_password' %}">Forgot Password?</a> <br />
 						  <button class="btn btn-primary btn-fill" type="submit">Sign In</button>
 						</form>
+					</div>
+					{% endif %}
+
+					<div style="padding:0px;" class="col-md-4 col-md-offset-0 col-sm6-4 col-sm-offset-1">
+						<form class="form-inline" role="form" action="/" method="post">
+	                        {% csrf_token %}
+	                        <button style="width:100%;" type="submit" class="btn btn-warning btn-fill">Send another essay</button>
+	                    </form>
 					</div>
 
 					<!-- Paypal donation box

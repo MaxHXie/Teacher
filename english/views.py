@@ -26,6 +26,8 @@ def index(request):
         form = EssayForm(request.POST)
         if form.is_valid():
             essay = form.save()
+            if request.user.is_anonymous is False:
+                essay.author = request.user
             essay.essay_text = cleanhtml(essay.essay_text)
             essay.characters = len(essay.essay_text)
             lang_id = selected_lang['lang_id']
@@ -272,6 +274,17 @@ def payment_result(request):
             return redirect('/correction?essay_id=' + str(essay.essay_id))
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
+
+def profile(request):
+    if request.user.is_anonymous:
+        return index(request)
+    else:
+        try:
+            essay_list = Essay.objects.filter(author=request.user).order_by('-upload_datetime')
+            return render(request, 'english/profile.html', {'essay_list': essay_list})
+        except (ValidationError, Essay.DoesNotExist) as e:
+            return redirect('/')
+
 
 def terms_of_service(request):
     return render(request, 'english/terms_of_service.html')

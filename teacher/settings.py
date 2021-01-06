@@ -120,6 +120,8 @@ GOOGLE_ANALYTICS = {
 
 CELERY_IMPORTS = ('google_analytics.tasks')
 
+LOGIN_REDIRECT_URL = "/profile"
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 

@@ -4,6 +4,7 @@ from .models import Essay
 
 class EssayAdmin(admin.ModelAdmin):
     fields = [
+    'author',
     'essay_id',
     'email',
     'upload_datetime',
@@ -14,7 +15,7 @@ class EssayAdmin(admin.ModelAdmin):
     'errors',
     ]
 
-    list_display = ('essay_id', 'email', 'upload_datetime', 'language', 'characters', 'shorter_essay_text')
+    list_display = ('author', 'essay_id', 'email', 'upload_datetime', 'language', 'characters', 'shorter_essay_text')
     readonly_fields = ['essay_id', 'upload_datetime']
     ordering = ('-upload_datetime',)
 

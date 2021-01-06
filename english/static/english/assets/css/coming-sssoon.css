@@ -973,6 +973,19 @@ body {
   overflow-y: scroll;
 }
 
+/* styling paper */
+#paper-small {
+  width:auto;
+  padding:5px;
+  background-color: white;
+  box-shadow: 0px 0px 5px 0px #888;
+  overflow-y: scroll;
+}
+
+#paper-small:hover {
+  background-color: rgba(90,255,90,0.5);
+}
+
 /* styling red vertical line */
 #paper::before {
   content: '';
