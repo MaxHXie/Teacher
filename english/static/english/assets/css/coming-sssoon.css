@@ -738,7 +738,10 @@ h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
 .main .logo.cursive{
     font-family: 'Grand Hotel',cursive;
     font-size: 82px;
-
+}
+.cursive-font{
+    font-family: 'Grand Hotel',cursive;
+    font-size: 64px;
 }
 .main .content{
     position: relative;
