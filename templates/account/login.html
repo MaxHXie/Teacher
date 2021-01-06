@@ -25,6 +25,9 @@
 {% endif %}
 
 <div style="margin:auto; width:240px;">
+{% for key, value in form.errors.items %}
+<span style='color:red;'>{% if key != '__all__' %}{{ key }} {% endif %}{{ value }}</span>
+{% endfor %}
 <form role="form" method="POST" action="{% url 'account_login' %}">
   {% csrf_token %}
   {% for field in form %}
