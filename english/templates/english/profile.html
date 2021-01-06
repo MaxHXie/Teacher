@@ -62,50 +62,54 @@
             </ul>
             {% if user.username %}
             <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#">
+                        Get expert help (coming soon)
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        Home
+                    </a>
+                </li>
+                 <li>
+                    <a href="/profile">
+                      Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="/accounts/logout">
+                        Logout
+                    </a>
+                </li>
+           </ul>
+          {% else %}
+            <ul class="nav navbar-nav navbar-right">
                   <li>
                       <a href="#">
-                          <i class="fa fa-check"></i>
-                          Get expert help (coming soon)
-                      </a>
-                  </li>
-                   <li>
-                      <a href="/profile">
-                        <i class="fa fa-user-circle"></i>
-                        Profile
+                          Ask an expert (coming soon)
                       </a>
                   </li>
                   <li>
-                      <a href="/accounts/logout">
-                          Logout
-                          <i class="fa fa-sign-out"></i>
+                      <a href="#">
+                          Home
                       </a>
                   </li>
-             </ul>
-            {% else %}
-              <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-check"></i>
-                            Ask an expert (coming soon)
-                        </a>
-                    </li>
-                     <li>
-                        <a href="/accounts/login">
-                            <i class="fa fa-sign-in"></i>
-                            Login
-                        </a>
-                    </li>
-                     <li>
-                        <a style="background-color:white; border-radius: 8px;" href="/accounts/signup">
-                            <span style="color:rgb(0,104,208);">
-                                <i class="fa fa-rocket"></i>
-                                <strong>
-                                    Sign up
-                                </strong>
-                            </span>
-                        </a>
-                    </li>
-               </ul>
+  		             <li>
+  		                <a href="/accounts/login">
+  		                    Login
+  		                </a>
+  		            </li>
+  		             <li>
+  		                <a style="background-color:white; border-radius: 8px;" href="/accounts/signup">
+  							<span style="color:rgb(0,104,208);">
+  								<strong>
+  				                    Sign up
+  								</strong>
+  							</span>
+  		                </a>
+  		            </li>
+  		       </ul>
                {% endif %}
 
         </div><!-- /.navbar-collapse -->
