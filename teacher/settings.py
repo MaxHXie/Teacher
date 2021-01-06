@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-SITE_ID=2
+SITE_ID=1
 ROOT_URLCONF = 'teacher.urls'
 
 AUTHENTICATION_BACKENDS = [
