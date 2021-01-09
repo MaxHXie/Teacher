@@ -1,0 +1,371 @@
+
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>ease-a</title>
+
+    <link href="{% static 'english/assets/css/bootstrap.css' %}" rel="stylesheet" />
+	<link href="{% static 'english/assets/css/coming-sssoon.css' %}" rel="stylesheet" />
+
+    <!--     Fonts     -->
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+	{% load google_analytics_tags %}
+	<div style="display:none">
+	    <img src="{% google_analytics %}" width="0" height="0" />
+	</div>
+	<link href='https://fonts.googleapis.com/css?family=Handlee' rel='stylesheet'>
+
+	<meta name="google-signin-client_id" content="82557386615-biidsdvtl3sbj2hqr6es0hp6ph7ns8e4.apps.googleusercontent.com.apps.googleusercontent.com">
+
+	<!-- Hotjar Tracking Code for www.ease-a.com -->
+	<script>
+	    (function(h,o,t,j,a,r){
+	        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+	        h._hjSettings={hjid:1960796,hjsv:6};
+	        a=o.getElementsByTagName('head')[0];
+	        r=o.createElement('script');r.async=1;
+	        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+	        a.appendChild(r);
+	    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+	</script>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-transparent navbar-fixed-top" role="navigation">
+	  <div class="container">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		  </button>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+			   <li>
+					<a href="/"> <span class="cursive-font">ease-a</span> </a>
+			  </li>
+
+			</ul>
+			{% if user.username %}
+			<ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="#">
+                        Get expert help (coming soon)
+                    </a>
+                </li>
+                <li>
+                    <a href="/">
+                        Home
+                    </a>
+                </li>
+                 <li>
+                    <a href="/profile">
+                      Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="/accounts/logout">
+                        Logout
+                    </a>
+                </li>
+           </ul>
+          {% else %}
+            <ul class="nav navbar-nav navbar-right">
+                  <li>
+                      <a href="#">
+                          Ask an expert (coming soon)
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#">
+                          Home
+                      </a>
+                  </li>
+  		             <li>
+  		                <a href="/accounts/login">
+  		                    Login
+  		                </a>
+  		            </li>
+  		             <li>
+  		                <a style="background-color:white; border-radius: 8px;" href="/accounts/signup">
+  							<span style="color:rgb(0,104,208);">
+  								<strong>
+  				                    Sign up
+  								</strong>
+  							</span>
+  		                </a>
+  		            </li>
+  		       </ul>
+			   {% endif %}
+
+		</div><!-- /.navbar-collapse -->
+	  </div><!-- /.container -->
+	</nav>
+
+<!-- Brand and toggle get grouped for better mobile display -->
+<!--
+<nav class="navbar navbar-transparent navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+-->
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <!--
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+         <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img src="{% static 'english/assets/images/flags/US.png' %}"/>
+                Login
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="#"><img src="{% static 'english/assets/images/flags/DE.png' %}"/> Deutsch</a></li>
+                <li><a href="#"><img src="{% static 'english/assets/images/flags/GB.png' %}"/> English(UK)</a></li>
+                <li><a href="#"><img src="{% static 'english/assets/images/flags/FR.png' %}"/> Français</a></li>
+                <li><a href="#"><img src="{% static 'english/assets/images/flags/RO.png' %}"/> Română</a></li>
+                <li><a href="#"><img src="{% static 'english/assets/images/flags/IT.png' %}"/> Italiano</a></li>
+
+                <li class="divider"></li>
+                <li><a href="#"><img src="{% static 'english/assets/images/flags/ES.png' %}"/> Español <span class="label label-default">soon</span></a></li>
+                <li><a href="#"><img src="{% static 'english/assets/images/flags/BR.png' %}"/> Português <span class="label label-default">soon</span></a></li>
+                <li><a href="#"><img src="{% static 'english/assets/images/flags/JP.png' %}"/> 日本語 <span class="label label-default">soon</span></a></li>
+                <li><a href="#"><img src="{% static 'english/assets/images/flags/TR.png' %}"/> Türkçe <span class="label label-default">soon</span></a></li>
+
+              </ul>
+        </li>
+
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="#">
+                    <i class="fa fa-facebook-square"></i>
+                    Like
+                </a>
+            </li>
+             <li>
+                <a href="#">
+                    <i class="fa fa-twitter"></i>
+                    Tweet
+                </a>
+            </li>
+             <li>
+                <a href="#">
+                    <i class="fa fa-gittip"></i>
+                    Gittip
+                </a>
+            </li>
+       </ul>
+
+    </div>
+  </div>
+</nav>
+-->
+<div class="main" style="background-image: url('{% static 'english/assets/images/blue_fade_background.jpg' %}')">
+
+<!--    Change the image source '/images/restaurant.jpg')" with your favourite image.     -->
+
+<!--   You can change the black color for the filter with those colors: blue, green, red, orange       -->
+
+
+
+    <div class="container">
+		<span style="opacity:0;" class="logo cursive">
+			ease-a
+		</span>
+        <div class="content">
+            <div class="subscribe">
+                <div class="row">
+					<div class="col-md-8 col-md-offset-0 col-sm6-4 col-sm-offset-1 ">
+						<div id="paper">
+						  	<div id="pattern">
+						    	<div id="content">
+						        	{{ essay_html|safe }}
+								</div>
+						    </div>
+						</div>
+					</div>
+					<div class="col-md-4 col-md-offset-0 col-sm6-4 col-sm-offset-1 error-types-box">
+						<h5 class="info-text"><strong>We found {{ error_types.total }} possible errors</strong></h5>
+						<span style="text-align:left;" class="info-text">
+							{% if error_types.misspelling > 0 %}{{ error_types.misspelling }} Misspellings <br /> {% endif %}
+							{% if error_types.grammar > 0 %}{{ error_types.grammar }} Grammar <br /> {% endif %}
+							{% if error_types.typographical > 0 %}{{ error_types.typographical }} Typographical <br /> {% endif %}
+							{% if error_types.formatting > 0 %}{{ error_types.formatting }} Formatting <br /> {% endif %}
+							{% if error_types.duplication > 0 %}{{ error_types.duplication }} Redundant <br /> {% endif %}
+							{% if error_types.style > 0 %}{{ error_types.style }} Stylistic <br /> {% endif %}
+							{% if error_types.whitespace > 0 %}{{ error_types.whitespace }} Whitespace <br /> {% endif %}
+							{% if error_types.non_conformance > 0 %}{{ error_types.non_conformance }} Non-conformance <br /> {% endif %}
+							{% if error_types.uncategorized > 0 %}{{ error_types.uncategorized }} Uncategorized <br /> {% endif %}
+						</span>
+					</div>
+
+					{% if user.username %}
+
+					<div class="col-md-4 col-md-offset-0 col-sm6-4 col-sm-offset-1 login-box">
+
+						<h5 class="info-text"><strong>Your essay has been saved!</strong></h5>
+						<a href="/profile">Click here to see your essays</a> <br />
+
+					</div>
+					{% else %}
+					<div class="col-md-4 col-md-offset-0 col-sm6-4 col-sm-offset-1 login-box">
+
+						<h5 class="info-text"><strong>Log in to save your essay</strong></h5>
+						<script>
+						  function onSuccess(googleUser) {
+						    console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+						  }
+						  function onFailure(error) {
+						    console.log(error);
+						  }
+						  function renderButton() {
+						    gapi.signin2.render('my-signin2', {
+						      'scope': 'profile email',
+						      'width': 240,
+						      'height': 50,
+						      'longtitle': true,
+						      'theme': 'dark',
+						      'onsuccess': onSuccess,
+						      'onfailure': onFailure
+						    });
+						  }
+						</script>
+						<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+
+						<form role="form" method="POST" action="{% url 'account_login' %}">
+						  {% csrf_token %}
+						  {% for field in form %}
+						      <div class="form-group">
+						          {{ field }}
+						      </div>
+						  {% endfor %}
+						  <a href="{% url 'account_signup' %}">Create new account</a> <br />
+						  <a href="{% url 'account_reset_password' %}">Forgot Password?</a> <br />
+						  <button class="btn btn-primary btn-fill" type="submit">Sign In</button>
+						</form>
+					</div>
+					{% endif %}
+
+					<div style="padding:0px;" class="col-md-4 col-md-offset-0 col-sm6-4 col-sm-offset-1">
+						<form class="form-inline" role="form" action="/" method="post">
+	                        {% csrf_token %}
+	                        <button style="width:100%;" type="submit" class="btn btn-warning btn-fill">Send another essay</button>
+	                    </form>
+					</div>
+
+					<!-- Paypal donation box
+					<div class="col-md-4 col-md-offset-0 col-sm6-4 col-sm-offset-1 payment-box">
+						<h5 class="info-text"><strong>Click here to donate 1 EUR</strong></h5>
+                        <div id="paypal-button-container"></div>
+                        <script src="https://www.paypal.com/sdk/js?client-id=AcCS6uqyTktqYnZnyGOo_uz71Qk0rLsm1NHJ0FsMHqaiGIPnXcR83syGD2OAgBpPPhhWKSQrYcf9OAl_&currency=EUR"></script>
+
+                        <script>
+
+                            function getCookie(name) {
+                                let cookieValue = null;
+                                if (document.cookie && document.cookie !== '') {
+                                    const cookies = document.cookie.split(';');
+                                    for (let i = 0; i < cookies.length; i++) {
+                                        const cookie = cookies[i].trim();
+                                        // Does this cookie string begin with the name we want?
+                                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                            break;
+                                        }
+                                    }
+                                }
+                                return cookieValue;
+                            }
+                            const csrftoken = getCookie('csrftoken');
+
+                            var total = '1'
+                            var essay_id = '{{ essay.essay_id }}'
+
+                            function completePayment(){
+                                var url = "{% url 'english:payment_success_backend' %}"
+
+                                fetch(url, {
+                                    method: 'POST',
+                                    headers:{
+                                        'Content-type':'appliction/json',
+                                        'X-CSRFToken': csrftoken,
+                                    },
+                                    body:JSON.stringify({'essay_id': essay_id})
+                                })
+                            }
+
+                            // Render the PayPal button into #paypal-button-container
+                            paypal.Buttons({
+
+                                // Set up the transaction
+                                createOrder: function(data, actions) {
+                                    return actions.order.create({
+                                        purchase_units: [{
+                                            amount: {
+                                                value: total
+                                            }
+                                        }]
+                                    });
+                                },
+
+                                // Finalize the transaction
+                                onApprove: function(data, actions) {
+                                    return actions.order.capture().then(function(details) {
+                                        // Show a success message to the buyer
+                                        completePayment()
+                                        window.location.href = "{% url 'english:payment_result' %}?essay_id={{ essay.essay_id }}";
+                                    });
+                                }
+
+
+                            }).render('#paypal-button-container');
+                        </script>
+                    </div>
+					-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+	$(document).ready(function(){
+		$('div').on('scroll', function () {
+			$('[data-toggle="popover"]').popover('hide');
+			$('[data-toggle="popover"]').popover('enable');
+		});
+		$('[data-toggle="popover"]').popover();
+	});
+
+</script>
+   <script src="{% static 'english/assets/js/jquery-1.10.2.js' %}" type="text/javascript"></script>
+   <script src="{% static 'english/assets/js/bootstrap.min.js' %}" type="text/javascript"></script>
+
+</html>

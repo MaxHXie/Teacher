@@ -3,37 +3,111 @@ import json, requests, re
 from django.http import JsonResponse
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.defaultfilters import truncatechars
 from django.core.exceptions import ValidationError
-from .forms import EssayForm, CustomLoginForm
-from .models import Essay
+from django.contrib.auth.models import User
+from .forms import EssayForm, AnswerForm, CustomLoginForm
+from .models import Essay, Answer, Profile
+
+flags = {'math': 'MATH', 'no': 'Natural Science', 'so': 'Social Science', 'other': 'Other', 'en-US' : 'US', 'es' : 'ES', 'fr' : 'FR', 'de' : 'DE', 'it' : 'IT', 'pt' : 'PT', 'sv' : 'SE'}
+subjects = {'math': 'Mathematics', 'no': 'Natural Science', 'so': 'Social Science', 'other': 'Other', 'en-US' : 'English', 'es' : 'Español', 'fr' : 'Français', 'de' : 'Deutsch', 'it' : 'Italiano', 'pt' : 'Português', 'sv' : 'Svenska'}
+
+
+def cleanhtml(raw_html):
+    cleanr = re.compile('<.*?>')
+    cleantext = re.sub(cleanr, '', raw_html)
+    return cleantext
+
+def config_errors(original, errors):
+    parts = []
+    start = 0
+
+    errors = sorted(errors, key = lambda i: i['offset'])
+    error_types = {'total' : 0, 'style' : 0, 'grammar' : 0, 'typographical' : 0, 'misspelling' : 0, 'formatting' : 0, 'duplication' : 0, 'whitespace': 0, 'register': 0, 'uncategorized': 0, 'non_conformance': 0}
+
+    for error in errors:
+        # count the number of errors
+        error_types[error['type'].replace('-', '_')] += 1
+        error_types['total'] += 1
+        corrections = error['corrections']
+        correction_text = ""
+        for i in range(len(corrections)):
+            #If there is only 1 correction, don't surround it with parenthesis
+            placeholder = corrections[i]
+            if len(corrections) == 1:
+                correction_text = placeholder
+            else:
+                #If there are several, separate them with commas, use the variable i to set a limit on how many corrections should  be displayed
+                if i == 0:
+                    correction_text = "(" + placeholder + ", "
+                elif i != len(corrections) - 1 and i != 2:
+                    correction_text = correction_text + placeholder + ', '
+                elif i == len(corrections) - 1 or i == 2:
+                    correction_text = correction_text + placeholder + ")"
+                    break
+        if error['message'] != '':
+            popover_header = error['message']
+        else:
+            popover_header = error['type']
+        the_string = "<u><a href='#' data-toggle='popover' title='{}' data-placement='top'><mark class='error'>".format(popover_header)
+        parts += original[start:error['offset']], the_string
+        start = (error['offset'])
+        if correction_text != "":
+            correction_mark = "<mark class='correction'>{}</mark>".format(correction_text)
+        else:
+            correction_mark = ""
+        parts += original[start:(error['offset']+error['length'])], "</mark></a></u>" + correction_mark
+        start = (error['offset']+error['length'])
+    parts += original[start:],
+    return ''.join(parts), error_types
 
 def index(request):
-    flags = {'en-US' : 'US', 'es' : 'ES', 'fr' : 'FR', 'de' : 'DE', 'it' : 'IT', 'pt' : 'PT', 'sv' : 'SE'}
-    languages = {'en-US' : 'English', 'es' : 'Español', 'fr' : 'Français', 'de' : 'Deutsch', 'it' : 'Italiano', 'pt' : 'Português', 'sv' : 'Svenska'}
-
-    def cleanhtml(raw_html):
-        cleanr = re.compile('<.*?>')
-        cleantext = re.sub(cleanr, '', raw_html)
-        return cleantext
-
     try:
         lang_id = request.GET['lang_id']
-        selected_lang = {'flag' : flags[lang_id], 'lang' : languages[lang_id], 'lang_id' : lang_id}
+        selected_lang = {'flag' : flags[lang_id], 'lang' : subjects[lang_id], 'lang_id' : lang_id}
     except:
-        selected_lang = {'flag' : 'US', 'lang' : 'English(US)', 'lang_id': 'en-US'}
+        selected_lang = {'flag' : 'none', 'lang' : 'none', 'lang_id': 'none'}
 
     if request.method == 'POST':
+        if request.user.is_anonymous is True:
+            return(redirect('/accounts/signup'))
+        bounty = request.POST.get('bounty')
+        lang_id = selected_lang['lang_id']
         form = EssayForm(request.POST)
-        if form.is_valid():
-            essay = form.save()
-            if request.user.is_anonymous is False:
+        if lang_id == "none":
+            return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'select_subject'})
+        elif bounty.isnumeric() is False:
+            return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'enter_bounty'})
+        elif int(bounty) < 1:
+            return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'bounty_too_small'})
+        else:
+            if form.is_valid():
+                essay = form.save()
+                essay.is_valid = False
                 essay.author = request.user
-            essay.essay_text = cleanhtml(essay.essay_text)
-            essay.characters = len(essay.essay_text)
-            lang_id = selected_lang['lang_id']
-            essay.language = lang_id
-            essay.save()
-            return submit(request, essay, lang_id)
+                essay.essay_text = cleanhtml(essay.essay_text)
+                essay.characters = len(essay.essay_text)
+                essay.language = lang_id
+                essay.subject = subjects[lang_id]
+                essay.bounty = bounty
+                if essay.title == "":
+                    essay.title = truncatechars(essay.essay_text, 32)
+                else:
+                    essay.title = cleanhtml(essay.title)
+
+                author_coins = essay.author.profile.coins
+                if int(bounty) > author_coins:
+                    return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'insufficient_coins'})
+                else:
+                    essay.author.profile.coins -= int(bounty)
+
+                essay.author.profile.save()
+                essay.is_valid = True
+                essay.save()
+                if lang_id != "math" and lang_id != "no" and lang_id != "so" and lang_id != "other":
+                    return submit(request, essay, lang_id)
+                else:
+                    return redirect('/correction?essay_id=' + str(essay.essay_id))
 
     else:
         form = EssayForm()
@@ -201,63 +275,32 @@ def submit(request, essay, lang_id):
 
 def correction(request):
 
-    def config_errors(original, errors):
-        parts = []
-        start = 0
-
-        errors = sorted(errors, key = lambda i: i['offset'])
-        error_types = {'total' : 0, 'style' : 0, 'grammar' : 0, 'typographical' : 0, 'misspelling' : 0, 'formatting' : 0, 'duplication' : 0, 'whitespace': 0, 'register': 0, 'uncategorized': 0, 'non_conformance': 0}
-
-        for error in errors:
-            # count the number of errors
-            error_types[error['type'].replace('-', '_')] += 1
-            error_types['total'] += 1
-            corrections = error['corrections']
-            correction_text = ""
-            for i in range(len(corrections)):
-                #If there is only 1 correction, don't surround it with parenthesis
-                placeholder = corrections[i]
-                if len(corrections) == 1:
-                    correction_text = placeholder
-                else:
-                    #If there are several, separate them with commas, use the variable i to set a limit on how many corrections should  be displayed
-                    if i == 0:
-                        correction_text = "(" + placeholder + ", "
-                    elif i != len(corrections) - 1 and i != 2:
-                        correction_text = correction_text + placeholder + ', '
-                    elif i == len(corrections) - 1 or i == 2:
-                        correction_text = correction_text + placeholder + ")"
-                        break
-            if error['message'] != '':
-                popover_header = error['message']
-            else:
-                popover_header = error['type']
-            the_string = "<u><a href='#' data-toggle='popover' title='{}' data-placement='top'><mark class='error'>".format(popover_header)
-            parts += original[start:error['offset']], the_string
-            start = (error['offset'])
-            if correction_text != "":
-                correction_mark = "<mark class='correction'>{}</mark>".format(correction_text)
-            else:
-                correction_mark = ""
-            parts += original[start:(error['offset']+error['length'])], "</mark></a></u>" + correction_mark
-            start = (error['offset']+error['length'])
-        parts += original[start:],
-        return ''.join(parts), error_types
-
     if request.method == "GET":
         essay_id = request.GET.get('essay_id')
+        scroll_section_id = request.GET.get('scroll')
         try:
             essay = Essay.objects.get(pk=essay_id)
             essay_text = essay.essay_text
-            essay_errors = json.loads(essay.errors)['content']
-            essay_html, error_types = config_errors(essay_text, essay_errors)
-            words = len(essay.essay_text.split())
-            form = CustomLoginForm()
-            return render(request, 'english/correction.html', {'essay': essay, 'error_types': error_types, 'essay_html': essay_html, 'words': words, 'form': form})
+            try:
+                essay_errors = json.loads(essay.errors)['content']
+                essay_html, error_types = config_errors(essay_text, essay_errors)
+            except:
+                essay_errors = ""
+                essay_html = essay_text
+                error_types = ""
+            answer_list = Answer.objects.all().filter(essay=essay).order_by('-upload_datetime')
+            has_ended = essay.has_ended
+            answer_form = AnswerForm()
+            return render(request, 'english/correction.html', {'essay': essay, 'answer_list': answer_list, 'has_ended': has_ended, 'scroll_section_id': scroll_section_id, 'answer_form': answer_form, 'error_types': error_types, 'essay_html': essay_html})
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
     else:
         return redirect('/')
+
+def market(request):
+    essay_list = Essay.objects.all().order_by('-upload_datetime')
+    return render(request, 'english/market.html', {'essay_list': essay_list})
+
 
 def payment_success_backend(request):
     body = json.loads(request.body)
@@ -276,15 +319,106 @@ def payment_result(request):
             return redirect('/')
 
 def profile(request):
+    if request.method == "GET":
+        username = request.GET.get('username')
+        try:
+            this_user = User.objects.get(username=username)
+            essay_list = Essay.objects.filter(author=this_user).order_by('-upload_datetime')
+            answer_list = Answer.objects.filter(author=this_user).order_by('-upload_datetime')
+            return render(request, 'english/profile.html', {'essay_list': essay_list, 'answer_list': answer_list, 'this_user': this_user})
+        except (ValidationError, User.DoesNotExist) as e:
+            pass
+
     if request.user.is_anonymous:
         return index(request)
     else:
         try:
             essay_list = Essay.objects.filter(author=request.user).order_by('-upload_datetime')
-            return render(request, 'english/profile.html', {'essay_list': essay_list})
+            answer_list = Answer.objects.filter(author=request.user).order_by('-upload_datetime')
+            return render(request, 'english/profile.html', {'essay_list': essay_list, 'answer_list': answer_list, 'this_user': request.user})
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
 
+def post_answer(request):
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            if request.user.is_anonymous is True:
+                return index(request)
+            else:
+                #Make sure that the essay the answer is referring to exists
+                try:
+                    essay_id = request.POST.get('essay_id')
+                    essay = Essay.objects.get(essay_id=essay_id)
+                except:
+                    return index(request)
+
+                answer = form.save()
+                answer.author = request.user
+                answer.answer_text = cleanhtml(answer.answer_text)
+                answer.essay = essay
+                answer.save()
+                return redirect('/correction?essay_id=' + str(essay_id) + '&scroll=section-answers')
+
+    return redirect('/correction?essay_id=' + str(essay_id) + '&scroll=section-answers')
+
+def winner(request):
+    if request.user.is_anonymous:
+        return index(request)
+    elif request.method == "GET":
+        essay_id = request.GET.get('essay_id')
+        answer_id = request.GET.get('answer_id')
+
+        #Check that both the essay and question exist
+        try:
+            essay = Essay.objects.get(essay_id=essay_id)
+        except Answer.DoesNotExist:
+            return index(request)
+
+        #When we know that the essay exists, we can load some variables
+        answer_list = Answer.objects.all().filter(essay=essay).order_by('-upload_datetime')
+        essay_text = essay.essay_text
+        try:
+            essay_errors = json.loads(essay.errors)['content']
+            essay_html, error_types = config_errors(essay_text, essay_errors)
+        except:
+            essay_errors = ""
+            essay_html = essay_text
+            error_types = ""
+
+        try:
+            answer = Answer.objects.get(answer_id=answer_id)
+        except Answer.DoesNotExist:
+            return redirect('/correction?essay_id=' + str(essay_id) + '&scroll=section-answers')
+
+        #Check that the current user is the author of the question
+        if request.user != essay.author:
+            return redirect('/correction?essay_id=' + str(essay_id) + '&scroll=section-answers')
+
+        #Check that the answerer and questionmaker is not the same user
+        if request.user == answer.author:
+            return redirect('/correction?essay_id=' + str(essay_id) + '&scroll=section-answers')
+
+        #Check if this question already has a winner
+        else:
+            for answer2 in Answer.objects.all().filter(essay=essay):
+                if answer2.winner == True:
+                    return redirect('/correction?essay_id=' + str(essay_id) + '&scroll=section-answers')
+
+            answer.winner = True
+            answer.save()
+
+            essay.has_ended = True
+            essay.save()
+
+            answer.author.profile.coins += essay.bounty
+            answer.author.profile.save()
+
+            #Load original variables here
+            return redirect('/correction?essay_id=' + str(essay_id) + '&scroll=section-answers')
+
+    else:
+        return index(request)
 
 def terms_of_service(request):
     return render(request, 'english/terms_of_service.html')

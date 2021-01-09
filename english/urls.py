@@ -9,4 +9,7 @@ urlpatterns = [
     path('payment_result', views.payment_result, name='payment_result'),
     path('terms_of_service', views.terms_of_service, name='terms_of_service'),
     path('profile', views.profile, name='profile'),
+    path('market', views.market, name='market'),
+    path('post_answer', views.post_answer, name='post_answer'),
+    path('winner', views.winner, name='winner'),
 ]

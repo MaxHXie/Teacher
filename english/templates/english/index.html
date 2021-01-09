@@ -2,30 +2,30 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-    <meta name="viewport" content="width=device-width" />
-
-    <title>ease-a</title>
-
-    <link href="{% static 'english/assets/css/bootstrap.css' %}" rel="stylesheet" />
-	<link href="{% static 'english/assets/css/coming-sssoon.css' %}" rel="stylesheet" />
-
-    <!--     Fonts     -->
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
-
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="{% static 'english/assets/images/apple-icon.png' %}">
 	<link rel="icon" href="{% static 'english/assets/images/logo.jpg' %}" type="image/gif" >
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>
+    ease-a
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <!-- CSS Files -->
+  <link href="{% static 'english/assets/css/material-kit.css' %}" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="{% static 'english/assets/demo/demo.css' %}" rel="stylesheet" />
+  <link href="{% static 'english/assets/demo/vertical-nav.css' %}" rel="stylesheet" />
 
 	{% load google_analytics_tags %}
 	<div style="display:none">
 		<img src="{% google_analytics %}" width="0" height="0" />
 	</div>
 
-	<!-- Hotjar Tracking Code for www.ease-a.com -->
 	<script>
 		(function(h,o,t,j,a,r){
 			h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
@@ -38,222 +38,301 @@
 	</script>
 </head>
 
-<body>
-
-	<nav class="navbar navbar-transparent navbar-fixed-top" role="navigation">
-	  <div class="container">
-	    <!-- Brand and toggle get grouped for better mobile display -->
-	    <div class="navbar-header">
-	      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-	        <span class="sr-only">Toggle navigation</span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	        <span class="icon-bar"></span>
-	      </button>
-	    </div>
-
-	    <!-- Collect the nav links, forms, and other content for toggling -->
-	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-			<ul class="nav navbar-nav">
-	           <li>
-				 	<a href="/"> <span class="cursive-font">ease-a</span> </a>
-	          </li>
-
-	        </ul>
-			{% if user.username %}
-			<ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="#">
-                        Get expert help (coming soon)
-                    </a>
-                </li>
-                <li>
-                    <a href="/">
-                        Home
-                    </a>
-                </li>
-                 <li>
-                    <a href="/profile">
-                      Profile
-                    </a>
-                </li>
-                <li>
-                    <a href="/accounts/logout">
-                        Logout
-                    </a>
-                </li>
-           </ul>
-          {% else %}
-            <ul class="nav navbar-nav navbar-right">
-                  <li>
-                      <a href="#">
-                          Ask an expert (coming soon)
-                      </a>
-                  </li>
-                  <li>
-                      <a href="#">
-                          Home
-                      </a>
-                  </li>
-  		             <li>
-  		                <a href="/accounts/login">
-  		                    Login
-  		                </a>
-  		            </li>
-  		             <li>
-  		                <a style="background-color:white; border-radius: 8px;" href="/accounts/signup">
-  							<span style="color:rgb(0,104,208);">
-  								<strong>
-  				                    Sign up
-  								</strong>
-  							</span>
-  		                </a>
-  		            </li>
-  		       </ul>
-			   {% endif %}
-
-	    </div><!-- /.navbar-collapse -->
-	  </div><!-- /.container -->
-	</nav>
-<!-- Brand and toggle get grouped for better mobile display -->
-<!--
-<nav class="navbar navbar-transparent navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-    </div>
--->
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <!--
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-         <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <img src="{% static 'english/assets/images/flags/US.png' %}"/>
-                Login
-                <b class="caret"></b>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="#"><img src="{% static 'english/assets/images/flags/DE.png' %}"/> Deutsch</a></li>
-                <li><a href="#"><img src="{% static 'english/assets/images/flags/GB.png' %}"/> English(UK)</a></li>
-                <li><a href="#"><img src="{% static 'english/assets/images/flags/FR.png' %}"/> Français</a></li>
-                <li><a href="#"><img src="{% static 'english/assets/images/flags/RO.png' %}"/> Română</a></li>
-                <li><a href="#"><img src="{% static 'english/assets/images/flags/IT.png' %}"/> Italiano</a></li>
-
-                <li class="divider"></li>
-                <li><a href="#"><img src="{% static 'english/assets/images/flags/ES.png' %}"/> Español <span class="label label-default">soon</span></a></li>
-                <li><a href="#"><img src="{% static 'english/assets/images/flags/BR.png' %}"/> Português <span class="label label-default">soon</span></a></li>
-                <li><a href="#"><img src="{% static 'english/assets/images/flags/JP.png' %}"/> 日本語 <span class="label label-default">soon</span></a></li>
-                <li><a href="#"><img src="{% static 'english/assets/images/flags/TR.png' %}"/> Türkçe <span class="label label-default">soon</span></a></li>
-
-              </ul>
-        </li>
-
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="#">
-                    <i class="fa fa-facebook-square"></i>
-                    Like
-                </a>
-            </li>
-             <li>
-                <a href="#">
-                    <i class="fa fa-twitter"></i>
-                    Tweet
-                </a>
-            </li>
-             <li>
-                <a href="#">
-                    <i class="fa fa-gittip"></i>
-                    Gittip
-                </a>
-            </li>
-       </ul>
-
-    </div>
--->
-<div class="main" style="background-image: url('{% static 'english/assets/images/blue_fade_background.jpg' %}')">
-
-
-<!--    Change the image source '/images/restaurant.jpg')" with your favourite image.     -->
-
-<!--   You can change the black color for the filter with those colors: blue, green, red, orange       -->
-
+<body class="landing-page sidebar-collapse">
+  <nav class="navbar navbar-color-on-scroll navbar-transparent    fixed-top  navbar-expand-lg " color-on-scroll="100" id="sectionsNav">
     <div class="container">
-        <span style="opacity:0;" class="logo cursive">
-            ease-a
-        </span>
-<!--  H1 can have 2 designs: "logo" and "logo cursive"           -->
-
-        <div class="content">
-            <div class="subscribe">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2 col-sm6-6 col-sm-offset-3 ">
-                        <form class="form-inline" role="form" action="" method="post">
-							<ul class="nav navbar-nav">
-								<li class="dropdown">
-						              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-						                <img src="{% with 'english/assets/images/flags/'|add:selected_lang.flag|add:'.png' as image_static %}{% static image_static %}{% endwith %}">
-										{{ selected_lang.lang }}<b class="caret"></b>
-						              </a>
-						              <ul class="dropdown-menu">
-										<li><a href="?lang_id=en-US"><img src="{% static 'english/assets/images/flags/US.png' %}"/>English(US)</a></li>
-										<li><a href="?lang_id=es"><img src="{% static 'english/assets/images/flags/ES.png' %}"/> Español</a></li>
-										<li><a href="?lang_id=fr"><img src="{% static 'english/assets/images/flags/FR.png' %}"/> Français</a></li>
-										<li><a href="?lang_id=de"><img src="{% static 'english/assets/images/flags/DE.png' %}"/> Deutsch</a></li>
-										<li><a href="?lang_id=it"><img src="{% static 'english/assets/images/flags/IT.png' %}"/> Italiano</a></li>
-										<li><a href="?lang_id=pt"><img src="{% static 'english/assets/images/flags/PT.png' %}"/> Português</a></li>
-										<li><a href="?lang_id=sv"><img src="{% static 'english/assets/images/flags/SE.png' %}"/> Svenska</a></li>
-										<!-- doesn't work
-										<li><a href="?lang=Russian&flag=RU&lang_id=ru-RU"><img src="{% static 'english/assets/images/flags/RU.png' %}"/> Russian</a></li>
-										<li><a href="?lang=Chinese&flag=CN&lang_id=zh-CN"><img src="{% static 'english/assets/images/flags/CN.png' %}"/> Chinese</a></li>
-										<li><a href="?lang=Japanese&flag=JP&lang_id=ja-JP"><img src="{% static 'english/assets/images/flags/JP.png' %}"/> Japanese</a></li>
-										-->
-						              </ul>
-						        </li>
-							</ul>
-							{% if already_paid %}
-								<br />
-								<span style="color:#FF5555;"><strong>The essay your tried to access has already been paid!</strong></span>
-							{% endif %}
-                          <div class="form-group">
-                            {% csrf_token %}
-                            {% for field in form.visible_fields %}
-                                {{ field }}
-                                <div>-</div>
-                            {% endfor %}
-
-                            <!--
-                            <label class="sr-only" for="exampleInputEmail2">Email address</label>
-                            <input type="email" class="form-control transparent" placeholder="Your email here...">
-                            <textarea rows=2 class="form-control"></textarea>
-                            -->
-
-                          </div>
-                          <button style="width:100%;" type="submit" class="btn btn-warning btn-fill">Send it!</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div class="navbar-translate">
+        <a class="navbar-brand" href="/">
+          ease-a </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse">
+				{% if user.username %}
+					<ul class="navbar-nav ml-auto">
+		        <li class="nav-item">
+		          <a href="/#submit-question" class="nav-link">
+		            <i class="material-icons">live_help</i> Ask a question
+		          </a>
+		        </li>
+						<li class="nav-item">
+							<a href="/market" class="nav-link">
+								<i class="material-icons">storefront</i> Marketplace
+							</a>
+						</li>
+		        <li class="nav-item">
+		          <a href="/profile" class="nav-link">
+		            <i class="material-icons">person</i> Profile
+		          </a>
+		        </li>
+						<li class="dropdown nav-item">
+		          <a href="#" class="nav-link" data-toggle="dropdown">
+		            <i class="material-icons">notifications</i>
+		          </a>
+              <div class="dropdown-menu dropdown-with-icons">
+                <a href="../sections.html#headers" class="dropdown-item">
+                  <span style="font-size:0.85em;">@maxxie answered your question </span><br />
+                  <span style="font-size:0.6em;"> 2021-01-07</span>
+                </a>
+                <a href="../sections.html#features" class="dropdown-item">
+                  <span style="font-size:0.85em;">@john also answered a question you answered </span><br />
+                  <span style="font-size:0.6em;"> 2021-01-02</span>
+                </a>
+                <a href="../sections.html#blogs" class="dropdown-item">
+                  <span style="font-size:0.85em;">@george answered your question </span><br />
+                  <span style="font-size:0.6em;"> 2020-12-24</span>
+                </a>
+                <a href="../sections.html#teams" class="dropdown-item">
+                  <span style="font-size:0.85em;">@richard answered your question </span><br />
+                  <span class="text-right" style="font-size:0.6em;"> 2020-12-22</span>
+                </a>
+                <a href="../sections.html#projects" class="dropdown-item background-light-red">
+                  <span style="font-size:0.85em;">Your question is ending soon, choose a winner! </span>
+                  <span style="font-size:0.6em;"> 2020-12-19</span>
+                </a>
+                <a href="../sections.html#projects" class="dropdown-item background-light-green">
+                  <span style="font-size:0.85em;">You got the winning answer to this question! </span><br />
+                  <span style="font-size:0.6em;"> 2020-12-18</span>
+                </a>
+                <a href="../sections.html#projects" class="dropdown-item background-light-red">
+                  <span style="font-size:0.85em;">Your answer lost this question </span><br />
+                  <span style="font-size:0.6em;"> 2020-12-16</span>
+                </a>
+              </div>
+		        </li>
+						<li class="button-container nav-item iframe-extern">
+							<a href="/get_coins" class="btn btn-rose btn-round btn-block">
+								<strong><span style="font-size:1.1em;">{{ user.profile.coins }} <i class="material-icons">copyright</i></span></strong>
+							</a>
+						</li>
+		      </ul>
+				{% else %}
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item">
+							<a href="/" class="nav-link">
+								<i class="material-icons">home</i> Home
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="/market" class="nav-link">
+								<i class="material-icons">storefront</i> Marketplace
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="/accounts/login" class="nav-link">
+								<i class="material-icons">login</i> Login
+							</a>
+						</li>
+						<li class="button-container nav-item iframe-extern">
+							<a href="/accounts/signup" class="btn btn-rose btn-round btn-block">
+								<i class="material-icons">person_add</i> Sign up
+							</a>
+						</li>
+				</ul>
+				{% endif %}
+      </div>
     </div>
-</div>
+  </nav>
+  <div class="page-header header-filter" data-parallax="true"  style="background-image: url('{% static 'english/assets/images/blue_fade_background.jpg' %}')">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h1 class="title">Make the world your teacher</h1>
+          <h4> Ask any question on any subject and let the world help you answer it. Let's get together and help each other as a global community of learners! <span style="color:red;">// @braingoesbrr on TikTok</span></h4>
+          <br>
+          <a href="#submit-question" class="btn btn-danger btn-raised btn-lg">
+            <i class="fa fa-play"></i> Ask a question
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="submit-question" class="main main-raised">
+    <div class="container">
+      <div class="section section-contacts">
+        <div class="row">
+          <div class="col-md-8 ml-auto mr-auto">
+            <h2 class="text-center title">Write a question or essay</h2>
+						<form class="contact-form" id="question-form" action="" method="post">
+							{% csrf_token %}
+							{% if page_error == 'select_subject' %}
+								<span style="color:red;"> Hey hey you gotta choose a subject </span>
+								<br />
+              {% elif page_error == 'enter_bounty' %}
+                <span style="color:red;"> Please enter a bounty in coins </span>
+                <br />
+              {% elif page_error == 'bounty_too_small' %}
+                <span style="color:red;"> Don't be cheap! Please enter a bounty that is at least not 0 </span>
+                <br />
+              {% endif %}
+							<div class="btn-group">
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+									{% if selected_lang.lang == "none" %}
+										Choose the subject
+									{% else %}
+										{% if selected_lang.lang == 'Mathematics' %}
+											<i class="material-icons">timeline</i>
+										{% elif selected_lang.lang == 'Natural Science' %}
+											<i class="material-icons">flash_on</i>
+										{% elif selected_lang.lang == 'Social Science' %}
+											<i class="material-icons">location_city</i>
+                    {% elif selected_lang.lang == 'Other' %}
+                      <i class="material-icons">free_breakfast</i>
+										{% else %}
+											<img src="{% with 'english/assets/images/flags/'|add:selected_lang.flag|add:'.png' as image_static %}{% static image_static %}{% endwith %}">
+										{% endif %}
+										{{ selected_lang.lang }}
+									{% endif %}
+							  </button>
 
+							  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="?lang_id=math"><i class="material-icons">timeline</i>Mathematics</a>
+  									<a class="dropdown-item" href="?lang_id=no"><i class="material-icons">flash_on</i>Natural Science</a>
+  									<a class="dropdown-item" href="?lang_id=so"><i class="material-icons">location_city</i>Social Science</a>
+  									<div class="dropdown-divider"></div>
+  									<a class="dropdown-item" href="?lang_id=en-US"><img src="{% static 'english/assets/images/flags/US.png' %}"/>English(US)</a>
+  							    <a class="dropdown-item" href="?lang_id=es"><img src="{% static 'english/assets/images/flags/ES.png' %}"/>Español</a>
+  							    <a class="dropdown-item" href="?lang_id=fr"><img src="{% static 'english/assets/images/flags/FR.png' %}"/>Français</a>
+  									<a class="dropdown-item" href="?lang_id=de"><img src="{% static 'english/assets/images/flags/DE.png' %}"/>Deutsch</a>
+  									<a class="dropdown-item" href="?lang_id=sv"><img src="{% static 'english/assets/images/flags/SE.png' %}"/>Svenska</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="?lang_id=other"><i class="material-icons">free_breakfast</i>Other</a>
+                  </select>
+                </div>
+							</div>
+							{% for field in form.visible_fields %}
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-group">
+											{{ field }}
+                  </div>
+                </div>
+              </div>
+							{% endfor %}
+              <div class="row">
+                <div class="col-md-4 ml-auto mr-auto text-center">
+                  {% if user.username %}
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+                    Send it
+                  </button>
+                  {% else %}
+                  <a style="width:100%;" class="btn btn-danger btn-raised" href="/accounts/signup">
+                    Send it
+                  </a>
+                  {% endif %}
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer footer-default">
+    <div class="container">
+			<!--
+      <nav class="float-left">
+        <ul>
+          <li>
+            <a href="https://www.creative-tim.com">
+              Creative Tim
+            </a>
+          </li>
+          <li>
+            <a href="https://creative-tim.com/presentation">
+              About Us
+            </a>
+          </li>
+          <li>
+            <a href="http://blog.creative-tim.com">
+              Blog
+            </a>
+          </li>
+          <li>
+            <a href="https://www.creative-tim.com/license">
+              Licenses
+            </a>
+          </li>
+        </ul>
+      </nav>
+			-->
+      <div class="copyright float-right">
+        &copy;
+        <script>
+          document.write(new Date().getFullYear())
+        </script>, made with <i class="material-icons">favorite</i> by Max (@braingoesbrr) for better learning.
+      </div>
+    </div>
+  </footer>
+  <!--   Core JS Files   -->
 
-</body>
-    <script src="{% static 'english/assets/js/jquery-1.10.2.js' %}" type="text/javascript"></script>
-	<script src="{% static 'english/assets/js/bootstrap.min.js' %}" type="text/javascript"></script>
-	{% if essay_limit %}
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Awesome sauce! <i class="material-icons">favorite</i></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          How many coins do you want to give the winning answer? <br />
+          <span style="font-size:0.8em;">If your question gets no answers in 48 hours, you will get your coins back.</span>
+          <br />
+          <br />
+          Your have {{ user.profile.coins }} coins<br/>
+          <form>
+            <input class='form-control' form="question-form" required="required" name="bounty" type="number" min="1" max="{{ user.profile.coins }}" placeholder="Enter your bounty in coins ... "></input>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" form="question-form">Post question</button>
+        </div>
+      </div>
+    </div>
+  </div>
 	<script>
-		alert("Essay limit reached. We cannot take care of your essay right now, please try again later.");
+		// if a subject has been filled in, scroll down automatically, otherwise start from the top
+		var queryDict = {}
+		location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
+		if (queryDict['lang_id'] != undefined || '{{ page_error }}' == 'select_subject' || '{{ page_error }}' == 'enter_bounty' || '{{ page_error }}' == 'bounty_too_small') {
+		var elmnt = document.getElementById("submit-question");
+		elmnt.scrollIntoView({behavior: 'smooth' });
+		}
 	</script>
-	{% endif %}
+  <script src="{% static 'english/assets/js/core/jquery.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'english/assets/js/core/popper.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'english/assets/js/core/bootstrap-material-design.min.js' %}" type="text/javascript"></script>
+  <script src="{% static 'english/assets/js/plugins/moment.min.js' %}"></script>
+  <!--	Plugin for the Datepicker, full documentation here: https://github.com/Eonasdan/bootstrap-datetimepicker -->
+  <script src="{% static 'english/assets/js/plugins/bootstrap-datetimepicker.js' %}" type="text/javascript"></script>
+  <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+  <script src="{% static 'english/assets/js/plugins/nouislider.min.js' %}" type="text/javascript"></script>
+  <!--  Google Maps Plugin    -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+  <!--	Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
+  <script src="{% static 'english/assets/js/plugins/bootstrap-tagsinput.js' %}"></script>
+  <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
+  <script src="{% static 'english/assets/js/plugins/bootstrap-selectpicker.js' %}" type="text/javascript"></script>
+  <!--	Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
+  <script src="{% static 'english/assets/js/plugins/jasny-bootstrap.min.js' %}" type="text/javascript"></script>
+  <!--	Plugin for Small Gallery in Product Page -->
+  <script src="{% static 'english/assets/js/plugins/jquery.flexisel.js' %}" type="text/javascript"></script>
+  <!-- Plugins for presentation and navigation  -->
+  <script src="{% static 'english/assets/demo/modernizr.js' %}" type="text/javascript"></script>
+  <script src="{% static 'english/assets/demo/vertical-nav.js' %}" type="text/javascript"></script>
+  <!-- Place this tag in your head or just before your close body tag. -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Js With initialisations For Demo Purpose, Don't Include it in Your Project -->
+  <script src="{% static 'english/assets/demo/demo.js' %}" type="text/javascript"></script>
+  <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+  <script src="{% static 'english/assets/js/material-kit.js' %}" type="text/javascript"></script>
+</body>
+
 </html>

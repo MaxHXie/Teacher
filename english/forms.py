@@ -1,5 +1,5 @@
 from django import forms
-from .models import Essay
+from .models import Essay, Answer
 from allauth.account.forms import LoginForm, SignupForm, ResetPasswordForm
 
 class EssayForm(forms.ModelForm):
@@ -8,7 +8,16 @@ class EssayForm(forms.ModelForm):
         fields = ['essay_text']
 
         widgets = {
-            'essay_text': forms.Textarea(attrs={'class':'form-control transparent', 'placeholder':'Copy and paste your essay here...', 'rows':16}),
+            'essay_text': forms.Textarea(attrs={'class':'form-control', 'placeholder':'Write your question or essay here ... ', 'rows':4}),
+        }
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ['answer_text']
+
+        widgets = {
+            'answer_text': forms.Textarea(attrs={'class':'form-control', 'id':'exampleBlogPost', 'rows':6}),
         }
 
 class CustomLoginForm(LoginForm):
