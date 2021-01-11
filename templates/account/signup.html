@@ -153,7 +153,7 @@
       <div class="row">
         <div class="col-md-10 ml-auto mr-auto">
           <div class="card card-signup">
-            <h2 class="card-title text-center">Register</h2>
+            <h2 class="card-title text-center">Just <span style="color:orange;">1</span> more step!</h2>
             <div class="card-body">
               <div class="row">
                 <div class="col-md-5 ml-auto">
@@ -162,7 +162,7 @@
                       <i class="material-icons">looks_one</i>
                     </div>
                     <div class="description">
-                      <h4 class="info-title">Ask your question on the marketplace <i class="material-icons">storefront</i></h4>
+                      <h4 class="info-title"><span style="color:#888;">Ask your question on the marketplace <i class="material-icons">storefront</i></span></h4>
                       <p class="description">
                         Be clear on what you need help with. <br />
                         How many coins do you want to give to the winning answer? (coin bounty)
@@ -174,7 +174,7 @@
                       <i class="material-icons">looks_two</i>
                     </div>
                     <div class="description">
-                      <h4 class="info-title">Wait for answers <i class="material-icons">group</i></h4>
+                      <h4 class="info-title"><span style="color:#888;">Wait for answers <i class="material-icons">group</i></span></h4>
                       <p class="description">
                         Answers start coming, and you are happy :) <br />
                         If you get no answers in 48 hours you get your coins back.
@@ -186,7 +186,7 @@
                       <i class="material-icons">looks_3</i>
                     </div>
                     <div class="description">
-                      <h4 class="info-title">Choose a winning answer! <i class="material-icons">emoji_events</i></h4>
+                      <h4 class="info-title"><span style="color:#888;">Choose a winning answer! <i class="material-icons">emoji_events</i></span></h4>
                       <p class="description">
                         The winning answer gets the coin bounty. <br />
                         Click the most helpful answer to make it the winning answer. <br />
@@ -196,6 +196,7 @@
                 </div>
                 <div class="col-md-5 mr-auto">
                   <div class="social text-center">
+                    <h3> <span class="card-title" style="color:orange;"><strong>Register an account</strong></span></h3>
                     <button class="btn btn-just-icon btn-round btn-twitter">
                       <i class="fa fa-twitter"></i>
                     </button>
@@ -205,7 +206,6 @@
                     <button class="btn btn-just-icon btn-round btn-facebook">
                       <i class="fa fa-facebook"> </i>
                     </button>
-                    <h4> or be classical </h4>
                     {% for key, value in form.errors.items %}
                     <span class="text-center" style="color:red;">{% if key != '__all__' %}{% endif %}{{ value }}</span>
                     {% endfor %}
