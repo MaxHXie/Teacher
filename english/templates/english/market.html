@@ -69,9 +69,9 @@
 		            <i class="material-icons">person</i> Profile
 		          </a>
 		        </li>
-		        <li class="dropdown nav-item">
+            <li class="dropdown nav-item">
 		          <a href="#" class="nav-link" data-toggle="dropdown">
-		            <i class="material-icons">notifications</i>
+		            <span id="notifications_icon"><i class="material-icons">notifications</i></span>
 		          </a>
               <div class="dropdown-menu dropdown-with-icons">
                 <a href="../sections.html#headers" class="dropdown-item">
@@ -104,6 +104,16 @@
                 </a>
               </div>
 		        </li>
+            <li class="dropdown nav-item">
+              <a href="#" class="nav-link" data-toggle="dropdown">
+                <span id="menu_other"><i class="material-icons">menu</i></span>
+              </a>
+              <div class="dropdown-menu dropdown-with-icons">
+                <a href="/accounts/logout" class="dropdown-item">
+                  <i class="material-icons">meeting_room</i>Logout<br />
+                </a>
+              </div>
+            </li>
 						<li class="button-container nav-item iframe-extern">
 							<a href="/get_coins" class="btn btn-rose btn-round btn-block">
 								<strong><span style="font-size:1.1em;">{{ user.profile.coins }} <i class="material-icons">copyright</i></span></strong>
@@ -182,7 +192,7 @@
                   </thead>
                   <tbody>
                     {% for essay in essay_list %}
-                    {% if essay.has_ended == False %}
+                    {% if essay.has_ended == False and essay.is_valid == True %}
                       <tr class="hover-light-yellow" onclick="document.location='/correction?essay_id={{ essay.essay_id }}';">
                         <td class="text-left">{{ essay.title|safe }} ... </td>
                         <td class="text-left">{{ essay.subject|safe }}</td>
@@ -244,6 +254,12 @@
     </div>
   </footer>
   <!--   Core JS Files   -->
+  <script>
+    if(window.screen.width<992){
+      document.getElementById("notifications_icon").append(" Notifications");
+      document.getElementById("menu_other").append(" Other");
+    }
+  </script>
   <script src="{% static 'english/assets/js/core/jquery.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'english/assets/js/core/popper.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'english/assets/js/core/bootstrap-material-design.min.js' %}" type="text/javascript"></script>

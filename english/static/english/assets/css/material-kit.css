@@ -16487,3 +16487,7 @@ select.selectpicker {
 .background-light-red{
   background-color:rgba(255,130,130,0.5);
 }
+
+.errorlist{
+  list-style-type: none;
+}
