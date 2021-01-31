@@ -29,13 +29,33 @@ class Essay(models.Model):
     def get_date(self):
         time = datetime.now()
         if self.upload_datetime.day == time.day:
-            return str(time.hour - self.upload_datetime.hour) + " hours ago"
+            if self.upload_datetime.hour == time.hour or abs(self.upload_datetime.hour - time.hour) == 1:
+                time_ago = time.minute - self.upload_datetime.minute
+                if time_ago == 1:
+                    return str(time_ago) + " minute ago"
+                else:
+                    return str(time_ago) + " minutes ago"
+            else:
+                time_ago = time.hour - self.upload_datetime.hour
+                if time_ago == 1:
+                    return str(time_ago) + " hour ago"
+                else:
+                    return str(time_ago) + " hours ago"
+
         else:
             if self.upload_datetime.month == time.month:
-                return str(time.day - self.upload_datetime.day) + " days ago"
+                time_ago = time.day - self.upload_datetime.day
+                if time_ago == 1:
+                    return str(time_ago) + " day ago"
+                else:
+                    return str(time_ago) + " days ago"
             else:
                 if self.upload_datetime.year == time.year:
-                    return str(time.month - self.upload_datetime.month) + " months ago"
+                    time_ago = time.month - self.upload_datetime.month
+                    if time_ago == 1:
+                        return str(time_ago) + " month ago"
+                    else:
+                        return str(time_ago) + " months ago"
         return self.upload_datetime
 
     def __str__(self):
@@ -78,13 +98,33 @@ class Answer(models.Model):
     def get_date(self):
         time = datetime.now()
         if self.upload_datetime.day == time.day:
-            return str(time.hour - self.upload_datetime.hour) + " hours ago"
+            if self.upload_datetime.hour == time.hour or abs(self.upload_datetime.hour - time.hour) == 1:
+                time_ago = time.minute - self.upload_datetime.minute
+                if time_ago == 1:
+                    return str(time_ago) + " minute ago"
+                else:
+                    return str(time_ago) + " minutes ago"
+            else:
+                time_ago = time.hour - self.upload_datetime.hour
+                if time_ago == 1:
+                    return str(time_ago) + " hour ago"
+                else:
+                    return str(time_ago) + " hours ago"
+
         else:
             if self.upload_datetime.month == time.month:
-                return str(time.day - self.upload_datetime.day) + " days ago"
+                time_ago = time.day - self.upload_datetime.day
+                if time_ago == 1:
+                    return str(time_ago) + " day ago"
+                else:
+                    return str(time_ago) + " days ago"
             else:
                 if self.upload_datetime.year == time.year:
-                    return str(time.month - self.upload_datetime.month) + " months ago"
+                    time_ago = time.month - self.upload_datetime.month
+                    if time_ago == 1:
+                        return str(time_ago) + " month ago"
+                    else:
+                        return str(time_ago) + " months ago"
         return self.upload_datetime
 
     def __str__(self):
