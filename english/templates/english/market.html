@@ -81,7 +81,7 @@
 								<!-- notification system -->
 								{% for notification in notifications|slice:":10" %}
                 <a href="/correction?essay_id={{ notification.action_object }}#{{ notification.target_object_id }}" class="dropdown-item {% if notification.unread == True %} background-light-blue {% endif %}">
-                  <span style="font-size:0.85em;">@{{ notification.actor.username }} answered your question <span style="font-size:0.7em;"> {{ notification.time_ago }}</span></span>
+                  <span style="font-size:0.85em;">{% if notification.verb == "won question" %}<strong>WINNER!</strong> You got the winning answer{% elif notification.verb == "answered question" %}@{{ notification.actor.username }} answered your question {% endif %}<span style="font-size:0.7em;"> {{ notification.time_ago }}</span></span>
                 </a>
 								{% endfor %}
               </div>

@@ -84,6 +84,13 @@ class Answer(models.Model):
             notify = Notification(action_object=post, actor=sender, recipient=post.author, target_object_id=answer.answer_id, verb="answered question")
             notify.save()
 
+    def user_also_answered_question(sender, instance, created, *args, **kwargs):
+        if created is True:
+            answer = instance
+            post = answer.essay
+            sender = answer.author
+            recipient = post.
+
     def user_won_question(sender, instance, created, update_fields, *args, **kwargs):
         try:
             if next(iter(update_fields)) == 'winner' and created is False:
