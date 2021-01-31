@@ -347,13 +347,11 @@
 		// if a subject has been filled in, scroll down automatically, otherwise start from the top
 		var queryDict = {}
 		location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
-		console.log(queryDict['first_login'])
 		if (queryDict['lang_id'] != undefined || '{{ page_error }}' == 'select_subject' || '{{ page_error }}' == 'enter_bounty' || '{{ page_error }}' == 'bounty_too_small') {
 		  var elmnt = document.getElementById("submit-question");
 		  elmnt.scrollIntoView({behavior: 'smooth' });
 		}
 		if (queryDict['first_login'] == 'true') {
-			console.log('yas')
 			$('#firstLoginModal').modal('show');
 		}
 	</script>

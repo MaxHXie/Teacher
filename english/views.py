@@ -202,7 +202,10 @@ def index(request):
                 if lang_id != "math" and lang_id != "no" and lang_id != "so" and lang_id != "other":
                     return submit(request, essay, lang_id)
                 else:
-                    return redirect('/correction?essay_id=' + str(essay.essay_id))
+                    if len(Essay.objects.filter(author=request.user)) == 1:
+                        return redirect('/correction?essay_id=' + str(essay.essay_id) + '&first_question=true')
+                    else:
+                        return redirect('/correction?essay_id=' + str(essay.essay_id))
 
     else:
         form = EssayForm()
@@ -366,7 +369,10 @@ def submit(request, essay, lang_id):
 
     essay.save()
 
-    return redirect('/correction?essay_id=' + str(essay.essay_id))
+    if len(Essay.objects.filter(author=request.user)) == 1:
+        return redirect('/correction?essay_id=' + str(essay.essay_id) + '&first_question=true')
+    else:
+        return redirect('/correction?essay_id=' + str(essay.essay_id))
 
 def correction(request):
 
