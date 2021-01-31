@@ -12,4 +12,6 @@ urlpatterns = [
     path('market', views.market, name='market'),
     path('post_answer', views.post_answer, name='post_answer'),
     path('winner', views.winner, name='winner'),
+    path('get_coins', views.get_coins, name='get_coins'),
+    path('read_notifications', views.read_notifications, name='read_notifications'),
 ]

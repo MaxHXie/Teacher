@@ -59,49 +59,31 @@
 		            <i class="material-icons">live_help</i> Ask a question
 		          </a>
 		        </li>
-            <li class="nav-item">
-              <a href="/market" class="nav-link">
-                <i class="material-icons">storefront</i> Marketplace
-              </a>
-            </li>
+						<li class="nav-item">
+							<a href="/market" class="nav-link">
+								<i class="material-icons">storefront</i> Answer questions
+							</a>
+						</li>
 		        <li class="nav-item">
 		          <a href="/profile" class="nav-link">
 		            <i class="material-icons">person</i> Profile
 		          </a>
 		        </li>
-            <li class="dropdown nav-item">
-		          <a href="#" class="nav-link" data-toggle="dropdown">
-		            <span id="notifications_icon"><i class="material-icons">notifications</i></span>
-		          </a>
+						<li class="dropdown nav-item">
+		          <a href="#" id="read_notifications" class="nav-link" data-toggle="dropdown">
+                  {% if has_unread_notifications %}
+                    <span class="soft-red-color" id="notifications_icon"><i class="material-icons">notifications_active</i></span>
+                  {% else %}
+		                <span id="notifications_icon"><i class="material-icons">notifications</i></span>
+                  {% endif %}
+              </a>
               <div class="dropdown-menu dropdown-with-icons">
-                <a href="../sections.html#headers" class="dropdown-item">
-                  <span style="font-size:0.85em;">@maxxie answered your question </span><br />
-                  <span style="font-size:0.6em;"> 2021-01-07</span>
+								<!-- notification system -->
+								{% for notification in notifications|slice:":10" %}
+                <a href="/correction?essay_id={{ notification.action_object }}#{{ notification.target_object_id }}" class="dropdown-item {% if notification.verb == "won question" %}background-light-green{% elif notification.unread == True %} background-light-blue {% endif %}">
+                  <span style="font-size:0.85em;">{% if notification.verb == "won question" %}<strong>WINNER!</strong> You got the winning answer{% elif notification.verb == "answered question" %}@{{ notification.actor.username }} answered your question {% endif %}<span style="font-size:0.7em;"> {{ notification.time_ago }}</span></span>
                 </a>
-                <a href="../sections.html#features" class="dropdown-item">
-                  <span style="font-size:0.85em;">@john also answered a question you answered </span><br />
-                  <span style="font-size:0.6em;"> 2021-01-02</span>
-                </a>
-                <a href="../sections.html#blogs" class="dropdown-item">
-                  <span style="font-size:0.85em;">@george answered your question </span><br />
-                  <span style="font-size:0.6em;"> 2020-12-24</span>
-                </a>
-                <a href="../sections.html#teams" class="dropdown-item">
-                  <span style="font-size:0.85em;">@richard answered your question </span><br />
-                  <span class="text-right" style="font-size:0.6em;"> 2020-12-22</span>
-                </a>
-                <a href="../sections.html#projects" class="dropdown-item background-light-red">
-                  <span style="font-size:0.85em;">Your question is ending soon, choose a winner! </span>
-                  <span style="font-size:0.6em;"> 2020-12-19</span>
-                </a>
-                <a href="../sections.html#projects" class="dropdown-item background-light-green">
-                  <span style="font-size:0.85em;">You got the winning answer to this question! </span><br />
-                  <span style="font-size:0.6em;"> 2020-12-18</span>
-                </a>
-                <a href="../sections.html#projects" class="dropdown-item background-light-red">
-                  <span style="font-size:0.85em;">Your answer lost this question </span><br />
-                  <span style="font-size:0.6em;"> 2020-12-16</span>
-                </a>
+								{% endfor %}
               </div>
 		        </li>
             <li class="dropdown nav-item">
@@ -127,11 +109,11 @@
 								<i class="material-icons">home</i> Home
 							</a>
 						</li>
-            <li class="nav-item">
-              <a href="/market" class="nav-link">
-                <i class="material-icons">storefront</i> Marketplace
-              </a>
-            </li>
+						<li class="nav-item">
+							<a href="/market" class="nav-link">
+								<i class="material-icons">storefront</i> Marketplace
+							</a>
+						</li>
 						<li class="nav-item">
 							<a href="/accounts/login" class="nav-link">
 								<i class="material-icons">login</i> Login
@@ -306,6 +288,32 @@
     if(window.screen.width<992){
       document.getElementById("notifications_icon").append(" Notifications");
       document.getElementById("menu_other").append(" Other");
+    }
+  </script>
+  <script>
+    // Create Django Ajax Call
+    window.onload = function() {
+      read_notifications = document.getElementById("read_notifications")
+      read_notifications.onclick = function() {
+          // Create Ajax Call
+          $.ajax({
+              url: '/read_notifications',
+              data: {
+                  'username': '{{ user.username }}',
+              },
+              dataType: 'json',
+          });
+        return false;
+      };
+  }
+  </script>
+  <script>
+    click_notification = document.getElementById("notifications_icon")
+    click_notification.onclick = function() {
+        if ($(this).find('i').text() == 'notifications_active'){
+            $(this).find('i').text('notifications');
+        }
+        click_notification.classList.remove("soft-red-color");
     }
   </script>
   <script src="{% static 'english/assets/js/core/jquery.min.js' %}" type="text/javascript"></script>

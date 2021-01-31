@@ -2,16 +2,97 @@ import json, requests, re
 
 from django.http import JsonResponse
 from django.urls import reverse
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.defaultfilters import truncatechars
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from .forms import EssayForm, AnswerForm, CustomLoginForm
-from .models import Essay, Answer, Profile
+from .models import Essay, Answer, Profile, UserAction
+from allauth.account.signals import user_signed_up
+from django.dispatch import receiver
+from datetime import datetime
+
+#notification system
+from notifications.models import Notification
 
 flags = {'math': 'MATH', 'no': 'Natural Science', 'so': 'Social Science', 'other': 'Other', 'en-US' : 'US', 'es' : 'ES', 'fr' : 'FR', 'de' : 'DE', 'it' : 'IT', 'pt' : 'PT', 'sv' : 'SE'}
 subjects = {'math': 'Mathematics', 'no': 'Natural Science', 'so': 'Social Science', 'other': 'Other', 'en-US' : 'English', 'es' : 'Español', 'fr' : 'Français', 'de' : 'Deutsch', 'it' : 'Italiano', 'pt' : 'Português', 'sv' : 'Svenska'}
 
+from allauth.account.signals import user_logged_in, user_logged_out, user_signed_up, password_changed, password_reset, email_confirmed, user_signed_up
+
+@receiver(user_logged_in)
+def user_logged_in(sender, request, user, **kwargs):
+    user_action = UserAction.objects.create(user=user, action="user_logged_in")
+
+@receiver(user_logged_out)
+def user_logged_out(sender, request, user, **kwargs):
+    user_action = UserAction.objects.create(user=user, action="user_logged_out")
+
+@receiver(user_signed_up)
+def user_signed_up(sender, request, user, **kwargs):
+    user_action = UserAction.objects.create(user=user, action="user_signed_up")
+    profile = Profile.objects.create(user=user)
+
+@receiver(password_changed)
+def password_changed(sender, request, user, **kwargs):
+    user_action = UserAction.objects.create(user=user, action="password_changed")
+
+@receiver(password_reset)
+def password_reset(sender, request, user, **kwargs):
+    user_action = UserAction.objects.create(user=user, action="password_reset")
+
+@receiver(email_confirmed)
+def email_confirmed(sender, request, user, **kwargs):
+    user_action = UserAction.objects.create(user=user, action="email_confirmed")
+
+def get_notifications(request):
+    user = request.user
+    if request.user.is_anonymous:
+        return []
+    else:
+        notifications = Notification.objects.filter(recipient=user).order_by('-timestamp')
+        has_unread_notifications = False
+        #remove items where the actor = recipient
+        notifications = [n for n in notifications if not n.actor == request.user]
+        for notification in notifications:
+            notification.time_ago = get_date(notification.timestamp)
+            if notification.unread == True:
+                has_unread_notifications = True
+
+        return notifications, has_unread_notifications
+
+def get_date(timestamp):
+    time = datetime.now()
+    if timestamp.day == time.day:
+        if timestamp.hour == time.hour or abs(timestamp.hour - time.hour) == 1:
+            time_ago = time.minute - timestamp.minute
+            if time_ago == 1:
+                return str(time_ago) + " minute ago"
+            else:
+                return str(time_ago) + " minutes ago"
+        else:
+            time_ago = time.hour - timestamp.hour
+            if time_ago == 1:
+                return str(time_ago) + " hour ago"
+            else:
+                return str(time_ago) + " hours ago"
+
+    else:
+        if timestamp.month == time.month:
+            time_ago = time.day - timestamp.day
+            if time_ago == 1:
+                return str(time_ago) + " day ago"
+            else:
+                return str(time_ago) + " days ago"
+        else:
+            if timestamp.year == time.year:
+                time_ago = time.month - timestamp.month
+                if time_ago == 1:
+                    return str(time_ago) + " month ago"
+                else:
+                    return str(time_ago) + " months ago"
+    return timestamp
 
 def cleanhtml(raw_html):
     cleanr = re.compile('<.*?>')
@@ -61,7 +142,21 @@ def config_errors(original, errors):
     parts += original[start:],
     return ''.join(parts), error_types
 
+
+def read_notifications(request):
+    #Update all notifications of user to unread=False, this happens when the user reads their notifications
+    data = {'user': request.user}
+    if request.method == "GET":
+        username = request.GET.get('username')
+        if username == request.user.username:
+            notifications = Notification.objects.filter(recipient=request.user, unread=True).update(unread=False)
+    return JsonResponse(data)
+
 def index(request):
+    #notification system
+
+    notifications, has_unread_notifications = get_notifications(request)
+
     try:
         lang_id = request.GET['lang_id']
         selected_lang = {'flag' : flags[lang_id], 'lang' : subjects[lang_id], 'lang_id' : lang_id}
@@ -75,11 +170,11 @@ def index(request):
         lang_id = selected_lang['lang_id']
         form = EssayForm(request.POST)
         if lang_id == "none":
-            return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'select_subject'})
+            return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'select_subject', 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
         elif bounty.isnumeric() is False:
-            return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'enter_bounty'})
+            return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'enter_bounty', 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
         elif int(bounty) < 1:
-            return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'bounty_too_small'})
+            return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'bounty_too_small', 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
         else:
             if form.is_valid():
                 essay = form.save()
@@ -97,7 +192,7 @@ def index(request):
 
                 author_coins = essay.author.profile.coins
                 if int(bounty) > author_coins:
-                    return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'insufficient_coins'})
+                    return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'page_error': 'insufficient_coins', 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
                 else:
                     essay.author.profile.coins -= int(bounty)
 
@@ -111,7 +206,7 @@ def index(request):
 
     else:
         form = EssayForm()
-    return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang})
+    return render(request, 'english/index.html', {'form': form, 'selected_lang': selected_lang, 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
 
 def submit(request, essay, lang_id):
 
@@ -275,6 +370,8 @@ def submit(request, essay, lang_id):
 
 def correction(request):
 
+    notifications, has_unread_notifications = get_notifications(request)
+
     if request.method == "GET":
         essay_id = request.GET.get('essay_id')
         scroll_section_id = request.GET.get('scroll')
@@ -291,15 +388,20 @@ def correction(request):
             answer_list = Answer.objects.all().filter(essay=essay).order_by('-upload_datetime')
             has_ended = essay.has_ended
             answer_form = AnswerForm()
-            return render(request, 'english/correction.html', {'essay': essay, 'answer_list': answer_list, 'has_ended': has_ended, 'scroll_section_id': scroll_section_id, 'answer_form': answer_form, 'error_types': error_types, 'essay_html': essay_html})
+            essay.views += 1
+            essay.save()
+            return render(request, 'english/correction.html', {'essay': essay, 'answer_list': answer_list, 'has_ended': has_ended, 'scroll_section_id': scroll_section_id, 'answer_form': answer_form, 'error_types': error_types, 'essay_html': essay_html, 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
     else:
         return redirect('/')
 
 def market(request):
+
+    notifications, has_unread_notifications = get_notifications(request)
+
     essay_list = Essay.objects.all().order_by('-upload_datetime')
-    return render(request, 'english/market.html', {'essay_list': essay_list})
+    return render(request, 'english/market.html', {'essay_list': essay_list, 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
 
 
 def payment_success_backend(request):
@@ -319,13 +421,16 @@ def payment_result(request):
             return redirect('/')
 
 def profile(request):
+
+    notifications, has_unread_notifications = get_notifications(request)
+
     if request.method == "GET":
         username = request.GET.get('username')
         try:
             this_user = User.objects.get(username=username)
             essay_list = Essay.objects.filter(author=this_user).order_by('-upload_datetime')
             answer_list = Answer.objects.filter(author=this_user).order_by('-upload_datetime')
-            return render(request, 'english/profile.html', {'essay_list': essay_list, 'answer_list': answer_list, 'this_user': this_user})
+            return render(request, 'english/profile.html', {'essay_list': essay_list, 'answer_list': answer_list, 'this_user': this_user, 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
         except (ValidationError, User.DoesNotExist) as e:
             pass
 
@@ -335,7 +440,7 @@ def profile(request):
         try:
             essay_list = Essay.objects.filter(author=request.user).order_by('-upload_datetime')
             answer_list = Answer.objects.filter(author=request.user).order_by('-upload_datetime')
-            return render(request, 'english/profile.html', {'essay_list': essay_list, 'answer_list': answer_list, 'this_user': request.user})
+            return render(request, 'english/profile.html', {'essay_list': essay_list, 'answer_list': answer_list, 'this_user': request.user, 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
 
@@ -353,7 +458,7 @@ def post_answer(request):
                 except:
                     return index(request)
 
-                answer = form.save()
+                answer = form.save(commit=False)
                 answer.author = request.user
                 answer.answer_text = cleanhtml(answer.answer_text)
                 answer.essay = essay
@@ -406,7 +511,7 @@ def winner(request):
                     return redirect('/correction?essay_id=' + str(essay_id) + '&scroll=section-answers')
 
             answer.winner = True
-            answer.save()
+            answer.save(update_fields=['winner'])
 
             essay.has_ended = True
             essay.save()
@@ -419,6 +524,11 @@ def winner(request):
 
     else:
         return index(request)
+
+def get_coins(request):
+    notifications, has_unread_notifications = get_notifications(request)
+
+    return HttpResponse('Coming soon!')
 
 def terms_of_service(request):
     return render(request, 'english/terms_of_service.html')

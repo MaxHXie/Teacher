@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from .models import Essay, Answer, Profile
+from notifications.models import Notification
 
 class EssayAdmin(admin.ModelAdmin):
     fields = [
@@ -46,6 +47,17 @@ class ProfileAdmin(admin.ModelAdmin):
     'coins'
     ]
     list_display = ('user', 'coins')
+
+class NotificationAdmin(admin.ModelAdmin):
+    fields = [
+    'recipient',
+    'sender',
+    'verb',
+    'timestamp',
+    'unread',
+    ]
+    list_display = ('recipient', 'sender', 'verb', 'timestamp', 'unread')
+    ordering = ('-timestamp')
 
 admin.site.register(Essay, EssayAdmin)
 admin.site.register(Answer, AnswerAdmin)

@@ -61,7 +61,7 @@
 		        </li>
 						<li class="nav-item">
 							<a href="/market" class="nav-link">
-								<i class="material-icons">storefront</i> Marketplace
+								<i class="material-icons">storefront</i> Answer questions
 							</a>
 						</li>
 		        <li class="nav-item">
@@ -70,38 +70,20 @@
 		          </a>
 		        </li>
 						<li class="dropdown nav-item">
-		          <a href="#" class="nav-link" data-toggle="dropdown">
-		            <span id="notifications_icon"><i class="material-icons">notifications</i></span>
-		          </a>
+		          <a href="#" id="read_notifications" class="nav-link" data-toggle="dropdown">
+                  {% if has_unread_notifications %}
+                    <span class="soft-red-color" id="notifications_icon"><i class="material-icons">notifications_active</i></span>
+                  {% else %}
+		                <span id="notifications_icon"><i class="material-icons">notifications</i></span>
+                  {% endif %}
+              </a>
               <div class="dropdown-menu dropdown-with-icons">
-                <a href="../sections.html#headers" class="dropdown-item">
-                  <span style="font-size:0.85em;">@maxxie answered your question </span><br />
-                  <span style="font-size:0.6em;"> 2021-01-07</span>
+								<!-- notification system -->
+								{% for notification in notifications|slice:":10" %}
+                <a href="/correction?essay_id={{ notification.action_object }}#{{ notification.target_object_id }}" class="dropdown-item {% if notification.unread == True %} background-light-blue {% endif %}">
+                  <span style="font-size:0.85em;">@{{ notification.actor.username }} answered your question <span style="font-size:0.7em;"> {{ notification.time_ago }}</span></span>
                 </a>
-                <a href="../sections.html#features" class="dropdown-item">
-                  <span style="font-size:0.85em;">@john also answered a question you answered </span><br />
-                  <span style="font-size:0.6em;"> 2021-01-02</span>
-                </a>
-                <a href="../sections.html#blogs" class="dropdown-item">
-                  <span style="font-size:0.85em;">@george answered your question </span><br />
-                  <span style="font-size:0.6em;"> 2020-12-24</span>
-                </a>
-                <a href="../sections.html#teams" class="dropdown-item">
-                  <span style="font-size:0.85em;">@richard answered your question </span><br />
-                  <span class="text-right" style="font-size:0.6em;"> 2020-12-22</span>
-                </a>
-                <a href="../sections.html#projects" class="dropdown-item background-light-red">
-                  <span style="font-size:0.85em;">Your question is ending soon, choose a winner! </span>
-                  <span style="font-size:0.6em;"> 2020-12-19</span>
-                </a>
-                <a href="../sections.html#projects" class="dropdown-item background-light-green">
-                  <span style="font-size:0.85em;">You got the winning answer to this question! </span><br />
-                  <span style="font-size:0.6em;"> 2020-12-18</span>
-                </a>
-                <a href="../sections.html#projects" class="dropdown-item background-light-red">
-                  <span style="font-size:0.85em;">Your answer lost this question </span><br />
-                  <span style="font-size:0.6em;"> 2020-12-16</span>
-                </a>
+								{% endfor %}
               </div>
 		        </li>
             <li class="dropdown nav-item">
@@ -151,8 +133,8 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6">
-          <h1 class="title">Make the world your teacher</h1>
-          <h4> Ask any question on any subject and let the world help you answer it. Let's get together and help each other as a global community of learners! <span style="color:red;">// @braingoesbrr on TikTok</span></h4>
+          <h1 class="title">Ask any question or essay</h1>
+          <h4> And let the community help you. Reward the best answer and get rewarded for helping others. Welcome to the club! <br /><span style="color:red;">// @braingoesbrr on TikTok</span></h4>
           <br>
           <a href="#submit-question" class="btn btn-danger btn-raised btn-lg">
             <i class="fa fa-play"></i> Ask a question
@@ -166,7 +148,6 @@
       <div class="section section-contacts">
         <div class="row">
           <div class="col-md-8 ml-auto mr-auto">
-            <h2 class="text-center title">Write a question or essay</h2>
 						<form class="contact-form" id="question-form" action="" method="post">
 							{% csrf_token %}
 							{% if page_error == 'select_subject' %}
@@ -198,6 +179,8 @@
 										{{ selected_lang.lang }}
 									{% endif %}
 							  </button>
+                <br />
+                <br />
 
 							  <div class="dropdown-menu">
                     <a class="dropdown-item" href="?lang_id=math"><i class="material-icons">timeline</i>Mathematics</a>
@@ -285,17 +268,16 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Awesome sauce! <i class="material-icons">favorite</i></h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">How many coins do you want to give the winning answer?</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          How many coins do you want to give the winning answer? <br />
           <span style="font-size:0.8em;">If your question gets no answers in 48 hours, you will get your coins back.</span>
           <br />
           <br />
-          Your have {{ user.profile.coins }} coins<br/>
+          You have {{ user.profile.coins }} coins<br/>
           <form>
             <input class='form-control' form="question-form" required="required" name="bounty" type="number" min="1" max="{{ user.profile.coins }}" placeholder="Enter your bounty in coins ... "></input>
           </form>
@@ -307,22 +289,28 @@
       </div>
     </div>
   </div>
-  <script>
-    if(window.screen.width<992){
-      document.getElementById("notifications_icon").append(" Notifications");
-      document.getElementById("menu_other").append(" Other");
-    }
-  </script>
-	<script>
-		// if a subject has been filled in, scroll down automatically, otherwise start from the top
-		var queryDict = {}
-		location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
-		if (queryDict['lang_id'] != undefined || '{{ page_error }}' == 'select_subject' || '{{ page_error }}' == 'enter_bounty' || '{{ page_error }}' == 'bounty_too_small') {
-		  var elmnt = document.getElementById("submit-question");
-		  elmnt.scrollIntoView({behavior: 'smooth' });
-		}
-	</script>
-  <script src="{% static 'english/assets/js/core/jquery.min.js' %}" type="text/javascript"></script>
+
+	<div class="modal fade" id="firstLoginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="firstLoginModalTitle">Welcome to the ease-a family!</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <span>First, please verify your email</span> <br /><br />
+					<span><strong>Now let's ask your first question or essay you need help with</strong></span> <br /><br />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Let's gooo!</button>
+					<span style="font-size:0.75em;"> Don't forget to give a coin reward to the answer you think is the best</span>
+        </div>
+      </div>
+    </div>
+  </div>
+	<script src="{% static 'english/assets/js/core/jquery.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'english/assets/js/core/popper.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'english/assets/js/core/bootstrap-material-design.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'english/assets/js/plugins/moment.min.js' %}"></script>
@@ -349,6 +337,52 @@
   <script src="{% static 'english/assets/demo/demo.js' %}" type="text/javascript"></script>
   <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
   <script src="{% static 'english/assets/js/material-kit.js' %}" type="text/javascript"></script>
+  <script>
+    if(window.screen.width<992){
+      document.getElementById("notifications_icon").append(" Notifications");
+      document.getElementById("menu_other").append(" Other");
+    }
+  </script>
+	<script>
+		// if a subject has been filled in, scroll down automatically, otherwise start from the top
+		var queryDict = {}
+		location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
+		console.log(queryDict['first_login'])
+		if (queryDict['lang_id'] != undefined || '{{ page_error }}' == 'select_subject' || '{{ page_error }}' == 'enter_bounty' || '{{ page_error }}' == 'bounty_too_small') {
+		  var elmnt = document.getElementById("submit-question");
+		  elmnt.scrollIntoView({behavior: 'smooth' });
+		}
+		if (queryDict['first_login'] == 'true') {
+			console.log('yas')
+			$('#firstLoginModal').modal('show');
+		}
+	</script>
+  <script>
+    // Create Django Ajax Call
+    window.onload = function() {
+      read_notifications = document.getElementById("read_notifications")
+      read_notifications.onclick = function() {
+          // Create Ajax Call
+          $.ajax({
+              url: '/read_notifications',
+              data: {
+                  'username': '{{ user.username }}',
+              },
+              dataType: 'json',
+          });
+        return false;
+      };
+  }
+  </script>
+  <script>
+    click_notification = document.getElementById("notifications_icon")
+    click_notification.onclick = function() {
+        if ($(this).find('i').text() == 'notifications_active'){
+            $(this).find('i').text('notifications');
+        }
+        click_notification.classList.remove("soft-red-color");
+    }
+  </script>
 </body>
 
 </html>

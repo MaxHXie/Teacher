@@ -38,7 +38,7 @@
 	</script>
 </head>
 
-<body class="landing-page sidebar-collapse">
+<body class="blog-posts sidebar-collapse">
   <nav class="navbar navbar-color-on-scroll navbar-transparent    fixed-top  navbar-expand-lg " color-on-scroll="100" id="sectionsNav">
     <div class="container">
       <div class="navbar-translate">
@@ -61,7 +61,7 @@
 		        </li>
 						<li class="nav-item">
 							<a href="/market" class="nav-link">
-								<i class="material-icons">storefront</i> Marketplace
+								<i class="material-icons">storefront</i> Answer questions
 							</a>
 						</li>
 		        <li class="nav-item">
@@ -69,44 +69,26 @@
 		            <i class="material-icons">person</i> Profile
 		          </a>
 		        </li>
-            <li class="dropdown nav-item">
-		          <a href="#" class="nav-link" data-toggle="dropdown">
-		            <span id="notifications_icon"><i class="material-icons">notifications</i></span>
-		          </a>
+						<li class="dropdown nav-item">
+		          <a href="#" id="read_notifications" class="nav-link" data-toggle="dropdown">
+                  {% if has_unread_notifications %}
+                    <span class="soft-red-color" id="notifications_icon"><i class="material-icons">notifications_active</i></span>
+                  {% else %}
+		                <span id="notifications_icon"><i class="material-icons">notifications</i></span>
+                  {% endif %}
+              </a>
               <div class="dropdown-menu dropdown-with-icons">
-                <a href="../sections.html#headers" class="dropdown-item">
-                  <span style="font-size:0.85em;">@maxxie answered your question </span><br />
-                  <span style="font-size:0.6em;"> 2021-01-07</span>
+								<!-- notification system -->
+								{% for notification in notifications|slice:":10" %}
+                <a href="/correction?essay_id={{ notification.action_object }}#{{ notification.target_object_id }}" class="dropdown-item {% if notification.unread == True %} background-light-blue {% endif %}">
+                  <span style="font-size:0.85em;">@{{ notification.actor.username }} answered your question <span style="font-size:0.7em;"> {{ notification.time_ago }}</span></span>
                 </a>
-                <a href="../sections.html#features" class="dropdown-item">
-                  <span style="font-size:0.85em;">@john also answered a question you answered </span><br />
-                  <span style="font-size:0.6em;"> 2021-01-02</span>
-                </a>
-                <a href="../sections.html#blogs" class="dropdown-item">
-                  <span style="font-size:0.85em;">@george answered your question </span><br />
-                  <span style="font-size:0.6em;"> 2020-12-24</span>
-                </a>
-                <a href="../sections.html#teams" class="dropdown-item">
-                  <span style="font-size:0.85em;">@richard answered your question </span><br />
-                  <span class="text-right" style="font-size:0.6em;"> 2020-12-22</span>
-                </a>
-                <a href="../sections.html#projects" class="dropdown-item background-light-red">
-                  <span style="font-size:0.85em;">Your question is ending soon, choose a winner! </span>
-                  <span style="font-size:0.6em;"> 2020-12-19</span>
-                </a>
-                <a href="../sections.html#projects" class="dropdown-item background-light-green">
-                  <span style="font-size:0.85em;">You got the winning answer to this question! </span><br />
-                  <span style="font-size:0.6em;"> 2020-12-18</span>
-                </a>
-                <a href="../sections.html#projects" class="dropdown-item background-light-red">
-                  <span style="font-size:0.85em;">Your answer lost this question </span><br />
-                  <span style="font-size:0.6em;"> 2020-12-16</span>
-                </a>
+								{% endfor %}
               </div>
 		        </li>
             <li class="dropdown nav-item">
               <a href="#" class="nav-link" data-toggle="dropdown">
-                <i class="material-icons">menu</i>
+                <span id="menu_other"><i class="material-icons">menu</i></span>
               </a>
               <div class="dropdown-menu dropdown-with-icons">
                 <a href="/accounts/logout" class="dropdown-item">
@@ -147,13 +129,13 @@
       </div>
     </div>
   </nav>
-  <div class="page-header header-filter" data-parallax="true" style="background-image: url('{% static 'english/assets/images/blue_fade_background.jpg' %}');">
+  <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('{% static 'english/assets/images/blue_fade_background.jpg' %}');">
     <div class="container">
       <div class="row">
         <div class="col-md-8 ml-auto mr-auto text-center">
           <h3 class="title"><span style="color:yellow;">{{ essay.bounty }} coins</span></h3>
-          <h3 class="title">{{ essay.title|safe }}</h3>
           <p>{{ essay_html|safe }}</p>
+          <span class="title"><a style="color:rgb(255,255,255);" href="/profile?username={{ essay.author.username }}">@{{ essay.author }}</a></span><a href="#pablo" class="btn btn-danger btn-link"><i class="material-icons">favorite</i>{{ essay.upvotes }}</a>{{ essay.views }} views
           <br>
         </div>
       </div>
@@ -165,8 +147,7 @@
         <div class="row">
           <div class="col-md-8 ml-auto mr-auto">
             <div class="media-area">
-              <h3 class="title text-center">{{ answer_list|length }} Answer{% if answer_list|length != 1 %}s{% endif %}</h3>
-              <h5 class="text-center">{% if user.username and user.username and essay.author == user and has_ended == False %}Choose a winner by clicking the most helpful answer{% endif %}</h5>
+              <h5 class="text-center">{% if user.username and user.username and essay.author == user and has_ended == False %}Click the best answer to choose a winner{% endif %}</h5>
               {% for answer in answer_list %}
               <div class="media" id="{{ answer.answer_id }}">
                 <a class="float-left" href="/profile?username={{ answer.author.username }}">
@@ -197,7 +178,6 @@
               </div>
               {% endfor %}
             </div>
-            <h3 class="title text-center">Write your answer</h3>
 						{% if user.username %}
             <div class="media media-post">
               <a class="author float-left" href="#pablo">
@@ -276,6 +256,32 @@
     if(window.screen.width<992){
       document.getElementById("notifications_icon").append(" Notifications");
       document.getElementById("menu_other").append(" Other");
+    }
+  </script>
+  <script>
+    // Create Django Ajax Call
+    window.onload = function() {
+      read_notifications = document.getElementById("read_notifications")
+      read_notifications.onclick = function() {
+          // Create Ajax Call
+          $.ajax({
+              url: '/read_notifications',
+              data: {
+                  'username': '{{ user.username }}',
+              },
+              dataType: 'json',
+          });
+        return false;
+      };
+  }
+  </script>
+  <script>
+    click_notification = document.getElementById("notifications_icon")
+    click_notification.onclick = function() {
+        if ($(this).find('i').text() == 'notifications_active'){
+            $(this).find('i').text('notifications');
+        }
+        click_notification.classList.remove("soft-red-color");
     }
   </script>
   <script>var element = document.getElementById("{{ scroll_section_id }}"); element.scrollIntoView();</script>

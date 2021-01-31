@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     #'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.google',
 
+    #notification system
+    'notifications',
 ]
 
 MIDDLEWARE = [
@@ -120,7 +122,7 @@ GOOGLE_ANALYTICS = {
 
 CELERY_IMPORTS = ('google_analytics.tasks')
 
-LOGIN_REDIRECT_URL = "/profile"
+LOGIN_REDIRECT_URL = "/?first_login=true#submit-question"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -135,6 +137,15 @@ USE_L10N = True
 
 USE_TZ = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtpout.secureserver.net'
+EMAIL_HOST_USER = 'main@ease-a.com'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = '13Rodaviko37'
+EMAIL_PORT = 80
+EMAIL_USE_SSL = False
+EMAIL_USE_TLS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

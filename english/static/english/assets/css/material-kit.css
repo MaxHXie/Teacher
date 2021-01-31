@@ -16480,6 +16480,10 @@ select.selectpicker {
     background-color:rgba(130,255,130,0.5);
 }
 
+.background-light-blue{
+    background-color:rgba(130,130,255,0.5);
+}
+
 .hover-light-yellow:hover{
     background-color:rgba(255,255,130,0.5);
 }
@@ -16490,4 +16494,8 @@ select.selectpicker {
 
 .errorlist{
   list-style-type: none;
+}
+
+.soft-red-color{
+  color:#f33527;
 }

@@ -4,6 +4,10 @@ from django.conf import settings
 from datetime import datetime
 import uuid
 
+#notification system
+from django.db.models.signals import post_save, post_delete
+from notifications.models import Notification
+
 class Essay(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null=True)
     title = models.TextField(max_length=64, default="")
@@ -18,6 +22,8 @@ class Essay(models.Model):
     essay_correction_json = models.TextField(default= "", max_length=500000, null=True, blank=True)
     errors = models.TextField(default= "", max_length=100000, null=True, blank=True)
     bounty = models.IntegerField(default=0)
+    views = models.IntegerField(default=0)
+    upvotes = models.IntegerField(default=0)
     is_valid = models.BooleanField(default=False)
 
     def get_date(self):
@@ -49,6 +55,26 @@ class Answer(models.Model):
     upvotes = models.IntegerField(default=0)
     downvotes = models.IntegerField(default=0)
 
+    #try using signals
+    def user_answered_question(sender, instance, created, *args, **kwargs):
+        if created is True:
+            answer = instance
+            post = answer.essay
+            sender = answer.author
+            notify = Notification(action_object=post, actor=sender, recipient=post.author, target_object_id=answer.answer_id, verb="answered question")
+            notify.save()
+
+    def user_won_question(sender, instance, created, update_fields, *args, **kwargs):
+        try:
+            if next(iter(update_fields)) == 'winner' and created is False:
+                answer = instance
+                post = answer.essay
+                recipient = answer.author
+                notify = Notification(action_object=post, actor=post.author, recipient=recipient, target_object_id=answer.answer_id, verb="won question")
+                notify.save()
+        except:
+            pass
+
     def get_date(self):
         time = datetime.now()
         if self.upload_datetime.day == time.day:
@@ -78,3 +104,12 @@ class Profile(models.Model):
 
     def default_profile_picture(self):
         return str(int(self.user.id) % 100)
+
+class UserAction(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null=True)
+    datetime = models.DateTimeField('datetime', auto_now_add=True)
+    action = models.TextField(max_length=32)
+
+#notification system
+post_save.connect(Answer.user_answered_question, sender=Answer)
+post_save.connect(Answer.user_won_question, sender=Answer)
