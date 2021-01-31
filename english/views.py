@@ -520,7 +520,7 @@ def winner(request):
             answer.save(update_fields=['winner'])
 
             essay.has_ended = True
-            essay.save()
+            essay.save(update_fields=['has_ended'])
 
             answer.author.profile.coins += essay.bounty
             answer.author.profile.save()

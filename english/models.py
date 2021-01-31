@@ -28,6 +28,17 @@ class Essay(models.Model):
     upvotes = models.IntegerField(default=0)
     is_valid = models.BooleanField(default=False)
 
+    def question_ended(sender, instance, created, update_fields, *args, **kwargs):
+        #notify all users that answered this question that it has ended
+        try:
+            if next(iter(update_fields)) == 'has_ended' and created is False:
+                post = instance
+                sender = post.author
+                recipients = User.objects.filter(pk__in=(post.answer_set.all().exclude(author=post.author).values_list('author', flat=True)))
+                notify.send(action_object=post, sender=sender, recipient=recipients, target_object_id=post.essay_id, verb="end question")
+        except:
+            pass
+
     def get_date(self):
         time = datetime.now()
         if self.upload_datetime.day == time.day:
@@ -103,6 +114,7 @@ class Answer(models.Model):
                 recipient = answer.author
                 notify = Notification(action_object=post, actor=post.author, recipient=recipient, target_object_id=answer.answer_id, verb="won question")
                 notify.save()
+
         except:
             pass
 
@@ -165,3 +177,4 @@ class UserAction(models.Model):
 post_save.connect(Answer.user_answered_question, sender=Answer)
 post_save.connect(Answer.user_also_answered_question, sender=Answer)
 post_save.connect(Answer.user_won_question, sender=Answer)
+post_save.connect(Essay.question_ended, sender=Essay)
