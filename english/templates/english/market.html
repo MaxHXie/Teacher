@@ -80,7 +80,7 @@
               <div class="dropdown-menu dropdown-with-icons">
 								<!-- notification system -->
 								{% for notification in notifications|slice:":10" %}
-                <a href="/correction?essay_id={{ notification.action_object }}#{{ notification.target_object_id }}" class="dropdown-item {% if notification.unread == True %} background-light-blue {% endif %}">
+                <a href="/correction?essay_id={{ notification.action_object }}#{{ notification.target_object_id }}" class="dropdown-item {% if notification.verb == "won question" %}background-light-green{% elif notification.unread == True %} background-light-blue {% endif %}">
                   <span style="font-size:0.85em;">{% if notification.verb == "won question" %}<strong>WINNER!</strong> You got the winning answer{% elif notification.verb == "answered question" %}@{{ notification.actor.username }} answered your question {% endif %}<span style="font-size:0.7em;"> {{ notification.time_ago }}</span></span>
                 </a>
 								{% endfor %}
