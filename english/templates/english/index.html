@@ -310,6 +310,28 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="firstVisitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="firstVisitModalTitle">Welcome to the NEW ease-a webiste!</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+					<span>Now you can ask any question, and everybody will do their best to answer it. The best answers get rewarded with in-game coins.</span> <br /><br />
+          <span><strong>Give it a chance and start by asking a question below!</strong></span> <br /><br />
+          <span>I hope you like it</span> <br /><br />
+          // @braingoesbrr</span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Let's gooo!</button>
+        </div>
+      </div>
+    </div>
+  </div>
 	<script src="{% static 'english/assets/js/core/jquery.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'english/assets/js/core/popper.min.js' %}" type="text/javascript"></script>
   <script src="{% static 'english/assets/js/core/bootstrap-material-design.min.js' %}" type="text/javascript"></script>
@@ -380,6 +402,16 @@
         }
         click_notification.classList.remove("soft-red-color");
     }
+  </script>
+  <script>
+  if (! localStorage.noFirstVisit) {
+      // show the element
+      // and do the animation you want
+      $('#firstVisitModal').modal('show');
+
+      // check this flag for escaping this if block next time
+      localStorage.noFirstVisit = "1";
+  }
   </script>
 </body>
 
