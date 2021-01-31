@@ -2,6 +2,8 @@ from django.db import models
 from django.template.defaultfilters import truncatechars  # or truncatewords
 from django.conf import settings
 from datetime import datetime
+from django.contrib.auth.models import User
+from notifications.signals import notify
 import uuid
 
 #notification system
@@ -84,6 +86,15 @@ class Answer(models.Model):
             notify = Notification(action_object=post, actor=sender, recipient=post.author, target_object_id=answer.answer_id, verb="answered question")
             notify.save()
 
+    def user_also_answered_question(sender, instance, created, *args, **kwargs):
+        if created is True:
+            answer = instance
+            post = answer.essay
+            sender = answer.author
+            # inform users that previously have answered this question that somebody else also have answered this question
+            recipients = User.objects.filter(pk__in=(post.answer_set.all().exclude(author=sender).exclude(author=post.author).values_list('author', flat=True)))
+            notify.send(action_object=post, sender=sender, recipient=recipients, target_object_id=answer.answer_id, verb="also answered question")
+
     def user_won_question(sender, instance, created, update_fields, *args, **kwargs):
         try:
             if next(iter(update_fields)) == 'winner' and created is False:
@@ -152,4 +163,5 @@ class UserAction(models.Model):
 
 #notification system
 post_save.connect(Answer.user_answered_question, sender=Answer)
+post_save.connect(Answer.user_also_answered_question, sender=Answer)
 post_save.connect(Answer.user_won_question, sender=Answer)
