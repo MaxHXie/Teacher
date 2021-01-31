@@ -49,7 +49,7 @@ def email_confirmed(sender, request, user, **kwargs):
 def get_notifications(request):
     user = request.user
     if request.user.is_anonymous:
-        return []
+        return [], False
     else:
         notifications = Notification.objects.filter(recipient=user).order_by('-timestamp')
         has_unread_notifications = False
