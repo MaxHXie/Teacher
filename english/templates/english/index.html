@@ -161,7 +161,7 @@
                 <br />
               {% endif %}
 							<div class="btn-group">
-							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							  <button id="lang_button" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									{% if selected_lang.lang == "none" %}
 										Choose the subject
 									{% else %}
@@ -183,17 +183,17 @@
                 <br />
 
 							  <div class="dropdown-menu">
-                    <a class="dropdown-item" href="?lang_id=math"><i class="material-icons">timeline</i>Mathematics</a>
-  									<a class="dropdown-item" href="?lang_id=no"><i class="material-icons">flash_on</i>Natural Science</a>
-  									<a class="dropdown-item" href="?lang_id=so"><i class="material-icons">location_city</i>Social Science</a>
+                    <a id="math" class="dropdown-item" href="#submit-question"><i class="material-icons">timeline</i>Mathematics</a>
+  									<a id="natural" class="dropdown-item" href="#submit-question"><i class="material-icons">flash_on</i>Natural Science</a>
+  									<a id="social" class="dropdown-item" href="#submit-question"><i class="material-icons">location_city</i>Social Science</a>
   									<div class="dropdown-divider"></div>
-  									<a class="dropdown-item" href="?lang_id=en-US"><img src="{% static 'english/assets/images/flags/US.png' %}"/>English(US)</a>
-  							    <a class="dropdown-item" href="?lang_id=es"><img src="{% static 'english/assets/images/flags/ES.png' %}"/>Español</a>
-  							    <a class="dropdown-item" href="?lang_id=fr"><img src="{% static 'english/assets/images/flags/FR.png' %}"/>Français</a>
-  									<a class="dropdown-item" href="?lang_id=de"><img src="{% static 'english/assets/images/flags/DE.png' %}"/>Deutsch</a>
-  									<a class="dropdown-item" href="?lang_id=sv"><img src="{% static 'english/assets/images/flags/SE.png' %}"/>Svenska</a>
+  									<a id="english"class="dropdown-item" href="#submit-question"><img src="{% static 'english/assets/images/flags/US.png' %}"/>English(US)</a>
+  							    <a id="spanish" class="dropdown-item" href="#submit-question"><img src="{% static 'english/assets/images/flags/ES.png' %}"/>Español</a>
+  							    <a id="french" class="dropdown-item" href="#submit-question"><img src="{% static 'english/assets/images/flags/FR.png' %}"/>Français</a>
+  									<a id="german" class="dropdown-item" href="#submit-question"><img src="{% static 'english/assets/images/flags/DE.png' %}"/>Deutsch</a>
+  									<a id="swedish" class="dropdown-item" href="#submit-question"><img src="{% static 'english/assets/images/flags/SE.png' %}"/>Svenska</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="?lang_id=other"><i class="material-icons">free_breakfast</i>Other</a>
+                    <a id="other" class="dropdown-item" href="#submit-question"><i class="material-icons">free_breakfast</i>Other</a>
                   </select>
                 </div>
 							</div>
@@ -365,6 +365,58 @@
       document.getElementById("menu_other").append(" Other");
     }
   </script>
+	<script>
+		math = document.getElementById("math")
+		math.onclick = function() {
+			window.history.replaceState(null, null, "?lang_id=math");
+			document.getElementById("lang_button").innerHTML = '<i class="material-icons">timeline</i> Mathematics';
+		}
+		natural = document.getElementById("natural")
+		natural.onclick = function() {
+			window.history.replaceState(null, null, "?lang_id=no");
+			document.getElementById("lang_button").innerHTML = '<i class="material-icons">flash_on</i> Natural Science';
+		}
+		social = document.getElementById("social")
+		social.onclick = function() {
+			window.history.replaceState(null, null, "?lang_id=so");
+			document.getElementById("lang_button").innerHTML = '<i class="material-icons">location_city</i> Social Science';
+		}
+		english = document.getElementById("english")
+		english.onclick = function() {
+			window.history.replaceState(null, null, "?lang_id=en-US");
+			var flag_path = "{% static 'english/assets/images/flags/US.png' %}"
+			document.getElementById("lang_button").innerHTML = '<img src="' + flag_path + '"> English';
+		}
+		spanish = document.getElementById("spanish")
+		spanish.onclick = function() {
+			window.history.replaceState(null, null, "?lang_id=es");
+			var flag_path = "{% static 'english/assets/images/flags/ES.png' %}"
+			document.getElementById("lang_button").innerHTML = '<img src="' + flag_path + '"> Español';
+		}
+		french = document.getElementById("french")
+		french.onclick = function() {
+			window.history.replaceState(null, null, "?lang_id=fr");
+			var flag_path = "{% static 'english/assets/images/flags/FR.png' %}"
+			document.getElementById("lang_button").innerHTML = '<img src="' + flag_path + '"> Français';
+		}
+		german = document.getElementById("german")
+		german.onclick = function() {
+			window.history.replaceState(null, null, "?lang_id=de");
+			var flag_path = "{% static 'english/assets/images/flags/DE.png' %}"
+			document.getElementById("lang_button").innerHTML = '<img src="' + flag_path + '"> Deutsch';
+		}
+		swedish = document.getElementById("swedish")
+		swedish.onclick = function() {
+			window.history.replaceState(null, null, "?lang_id=sv");
+			var flag_path = "{% static 'english/assets/images/flags/SE.png' %}"
+			document.getElementById("lang_button").innerHTML = '<img src="' + flag_path + '"> Svenska';
+		}
+		other = document.getElementById("other")
+		other.onclick = function() {
+			window.history.replaceState(null, null, "?lang_id=other");
+			document.getElementById("lang_button").innerHTML = '<i class="material-icons">free_breakfast</i> Other';
+		}
+	</script>
 	<script>
 		// if a subject has been filled in, scroll down automatically, otherwise start from the top
 		var queryDict = {}
