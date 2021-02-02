@@ -64,34 +64,34 @@ def get_notifications(request):
 
 def get_date(timestamp):
     time = datetime.now()
-    if timestamp.day == time.day:
-        if timestamp.hour == time.hour or abs(timestamp.hour - time.hour) == 1:
-            time_ago = time.minute - timestamp.minute
-            if time_ago == 1:
-                return str(time_ago) + " minute ago"
-            else:
-                return str(time_ago) + " minutes ago"
+    if timestamp.hour == time.hour or abs(timestamp.hour - time.hour) == 1 or abs(timestamp.hour - time.hour) == 2:
+        time_ago = time.minute - timestamp.minute
+        if time_ago == 1:
+            return str(time_ago) + " minute ago"
         else:
+            return str(time_ago) + " minutes ago"
+    else:
+        if timestamp.day == time.day or abs(timestamp.day - time.day) == 1:
             time_ago = time.hour - timestamp.hour
             if time_ago == 1:
                 return str(time_ago) + " hour ago"
             else:
                 return str(time_ago) + " hours ago"
 
-    else:
-        if timestamp.month == time.month:
-            time_ago = time.day - timestamp.day
-            if time_ago == 1:
-                return str(time_ago) + " day ago"
-            else:
-                return str(time_ago) + " days ago"
         else:
-            if timestamp.year == time.year:
-                time_ago = time.month - timestamp.month
+            if timestamp.month == time.month or abs(timestamp.month - time.month) == 1:
+                time_ago = time.day - timestamp.day
                 if time_ago == 1:
-                    return str(time_ago) + " month ago"
+                    return str(time_ago) + " day ago"
                 else:
-                    return str(time_ago) + " months ago"
+                    return str(time_ago) + " days ago"
+            else:
+                if timestamp.year == time.year or abs(timestamp.year - timestamp.year ) == 1:
+                    time_ago = time.month - timestamp.month
+                    if time_ago == 1:
+                        return str(time_ago) + " month ago"
+                    else:
+                        return str(time_ago) + " months ago"
     return timestamp
 
 def cleanhtml(raw_html):
