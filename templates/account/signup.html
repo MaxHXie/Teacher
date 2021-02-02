@@ -205,10 +205,10 @@
                     <button class="btn btn-just-icon btn-round btn-facebook">
                       <i class="fa fa-facebook"> </i>
                     </button>
+                    -->
                     {% for key, value in form.errors.items %}
                     <span class="text-center" style="color:red;">{% if key != '__all__' %}{% endif %}{{ value }}</span>
                     {% endfor %}
-                    -->
                   </div>
                   <form role="form" class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
                     {% csrf_token %}
