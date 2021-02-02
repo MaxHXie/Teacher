@@ -1,9 +1,10 @@
 from django.db import models
 from django.template.defaultfilters import truncatechars  # or truncatewords
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime, timezone
 from django.contrib.auth.models import User
 from notifications.signals import notify
+import math
 import uuid
 
 #notification system
@@ -40,36 +41,38 @@ class Essay(models.Model):
             pass
 
     def get_date(self):
-        time = datetime.now()
-        if self.upload_datetime.hour == time.hour or abs(self.upload_datetime.hour - time.hour) == 1 or abs(self.upload_datetime.hour - time.hour) == 2:
-            time_ago = time.minute - self.upload_datetime.minute
-            if time_ago == 1:
-                return str(time_ago) + " minute ago"
-            else:
-                return str(time_ago) + " minutes ago"
-        else:
-            if self.upload_datetime.day == time.day or abs(self.upload_datetime.day - time.day) == 1:
-                time_ago = time.hour - self.upload_datetime.hour
-                if time_ago == 1:
-                    return str(time_ago) + " hour ago"
-                else:
-                    return str(time_ago) + " hours ago"
+        difference = datetime.now(timezone.utc) - self.upload_datetime
+        minutes = int(round(difference.total_seconds() / 60))
 
+        if minutes < 60:
+            if minutes == 1:
+                return "1 minute ago"
             else:
-                if self.upload_datetime.month == time.month or abs(self.upload_datetime.month - time.month) == 1:
-                    time_ago = time.day - self.upload_datetime.day
-                    if time_ago == 1:
-                        return str(time_ago) + " day ago"
-                    else:
-                        return str(time_ago) + " days ago"
-                else:
-                    if self.upload_datetime.year == time.year or abs(self.upload_datetime.year - self.upload_datetime.year ) == 1:
-                        time_ago = time.month - self.upload_datetime.month
-                        if time_ago == 1:
-                            return str(time_ago) + " month ago"
-                        else:
-                            return str(time_ago) + " months ago"
-        return self.upload_datetime
+                return str(minutes) + " minutes ago"
+        elif minutes < 1440:
+            hours = math.floor(minutes/60)
+            if hours == 1:
+                return "1 hour ago"
+            else:
+                return str(hours) + " hours ago"
+        elif minutes < 43200:
+            days = math.floor(minutes/1440)
+            if days == 1:
+                return "1 day ago"
+            else:
+                return str(days) + " days ago"
+        elif minutes < 525600:
+            months = math.floor(minutes/43200)
+            if months == 1:
+                return "1 month ago"
+            else:
+                return str(months) + " months ago"
+        elif minutes >= 525600:
+            years = math.floor(minutes/525600)
+            if years == 1:
+                return "1 year ago"
+            else:
+                return str(years) + " years ago"
 
     def __str__(self):
         return str(self.essay_id)

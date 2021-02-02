@@ -11,7 +11,8 @@ from .forms import EssayForm, AnswerForm, CustomLoginForm
 from .models import Essay, Answer, Profile, UserAction
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
-from datetime import datetime
+from datetime import datetime, timezone
+import math
 
 #notification system
 from notifications.models import Notification
@@ -63,36 +64,38 @@ def get_notifications(request):
         return notifications, has_unread_notifications
 
 def get_date(timestamp):
-    time = datetime.now()
-    if timestamp.hour == time.hour or abs(timestamp.hour - time.hour) == 1 or abs(timestamp.hour - time.hour) == 2:
-        time_ago = time.minute - timestamp.minute
-        if time_ago == 1:
-            return str(time_ago) + " minute ago"
-        else:
-            return str(time_ago) + " minutes ago"
-    else:
-        if timestamp.day == time.day or abs(timestamp.day - time.day) == 1:
-            time_ago = time.hour - timestamp.hour
-            if time_ago == 1:
-                return str(time_ago) + " hour ago"
-            else:
-                return str(time_ago) + " hours ago"
+        difference = datetime.now(timezone.utc) - timestamp
+        minutes = int(round(difference.total_seconds() / 60))
 
-        else:
-            if timestamp.month == time.month or abs(timestamp.month - time.month) == 1:
-                time_ago = time.day - timestamp.day
-                if time_ago == 1:
-                    return str(time_ago) + " day ago"
-                else:
-                    return str(time_ago) + " days ago"
+        if minutes < 60:
+            if minutes == 1:
+                return "1 minute ago"
             else:
-                if timestamp.year == time.year or abs(timestamp.year - timestamp.year ) == 1:
-                    time_ago = time.month - timestamp.month
-                    if time_ago == 1:
-                        return str(time_ago) + " month ago"
-                    else:
-                        return str(time_ago) + " months ago"
-    return timestamp
+                return str(minutes) + " minutes ago"
+        elif minutes < 1440:
+            hours = math.floor(minutes/60)
+            if hours == 1:
+                return "1 hour ago"
+            else:
+                return str(hours) + " hours ago"
+        elif minutes < 43200:
+            days = math.floor(minutes/1440)
+            if days == 1:
+                return "1 day ago"
+            else:
+                return str(days) + " days ago"
+        elif minutes < 525600:
+            months = math.floor(minutes/43200)
+            if months == 1:
+                return "1 month ago"
+            else:
+                return str(months) + " months ago"
+        elif minutes >= 525600:
+            years = math.floor(minutes/525600)
+            if years == 1:
+                return "1 year ago"
+            else:
+                return str(years) + " years ago"
 
 def cleanhtml(raw_html):
     cleanr = re.compile('<.*?>')
