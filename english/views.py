@@ -156,6 +156,7 @@ def read_notifications(request):
     return JsonResponse(data)
 
 def index(request):
+
     #notification system
 
     notifications, has_unread_notifications = get_notifications(request)
