@@ -170,7 +170,7 @@ class Profile(models.Model):
 
     def default_profile_picture(self):
         if self.user.username == 'braingoesbrr':
-            return
+            return 'braingoesbrr'
         else:
             return str(int(self.user.id) % 100)
 
