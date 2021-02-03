@@ -8,7 +8,7 @@ class EssayForm(forms.ModelForm):
         fields = ['essay_text']
 
         widgets = {
-            'essay_text': forms.Textarea(attrs={'class':'form-control', 'placeholder':'Write your question or essay here ... ', 'rows':4}),
+            'essay_text': forms.Textarea(attrs={'class':'form-control', 'placeholder':'Write your question or essay here ... ', 'rows':8}),
         }
 
 class AnswerForm(forms.ModelForm):
