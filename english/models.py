@@ -169,7 +169,10 @@ class Profile(models.Model):
         return str(self.user.username)
 
     def default_profile_picture(self):
-        return str(int(self.user.id) % 100)
+        if self.user.username == 'braingoesbrr':
+            return
+        else:
+            return str(int(self.user.id) % 100)
 
 class UserAction(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null=True)
