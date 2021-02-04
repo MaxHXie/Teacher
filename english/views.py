@@ -157,8 +157,6 @@ def read_notifications(request):
 
 def index(request):
 
-    #notification system
-
     notifications, has_unread_notifications = get_notifications(request)
 
     try:

@@ -39,7 +39,7 @@
 </head>
 
 <body class="blog-posts sidebar-collapse">
-  <nav class="navbar navbar-color-on-scroll navbar-transparent    fixed-top  navbar-expand-lg " color-on-scroll="100" id="sectionsNav">
+  <nav class="navbar fixed-top navbar-expand-lg" id="sectionsNav">
     <div class="container">
       <div class="navbar-translate">
         <a class="navbar-brand" href="/">
@@ -54,21 +54,21 @@
       <div class="collapse navbar-collapse">
 				{% if user.username %}
 					<ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+		          <a href="/profile" class="nav-link">
+		            <img class="media-object material-icons" src="{% static 'english/assets/images/identicons/'|add:user.profile.default_profile_picture|add:'.png' %}" alt="..."><span id="profile_icon"></span>
+		          </a>
+		        </li>
 		        <li class="nav-item">
 		          <a href="/#submit-question" class="nav-link">
-		            <i class="material-icons">live_help</i> Ask a question
+		            <span id="questions_icon"><i class="material-icons">live_help</i></span>
 		          </a>
 		        </li>
 						<li class="nav-item">
 							<a href="/market" class="nav-link">
-								<i class="material-icons">storefront</i> Answer questions
+								<span id="answers_icon"><i class="material-icons">storefront</i></span>
 							</a>
 						</li>
-		        <li class="nav-item">
-		          <a href="/profile" class="nav-link">
-		            <i class="material-icons">person</i> Profile
-		          </a>
-		        </li>
 						<li class="dropdown nav-item">
 		          <a href="#" id="read_notifications" class="nav-link" data-toggle="dropdown">
                   {% if has_unread_notifications %}
@@ -105,13 +105,13 @@
 				{% else %}
 					<ul class="navbar-nav ml-auto">
 						<li class="nav-item">
-							<a href="/" class="nav-link">
-								<i class="material-icons">home</i> Home
-							</a>
+              <a href="/#submit-question" class="nav-link">
+		            <span id="questions_icon"><i class="material-icons">live_help</i></span>
+		          </a>
 						</li>
 						<li class="nav-item">
-							<a href="/market" class="nav-link">
-								<i class="material-icons">storefront</i> Answer questions
+              <a href="/market" class="nav-link">
+								<span id="answers_icon"><i class="material-icons">storefront</i></span>
 							</a>
 						</li>
 						<li class="nav-item">
@@ -300,10 +300,13 @@
   <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
   <script src="{% static 'english/assets/js/material-kit.js' %}" type="text/javascript"></script>
 	<script>
-    if(window.screen.width<992){
-      document.getElementById("notifications_icon").append(" Notifications");
-      document.getElementById("menu_other").append(" Other");
-    }
+  if(window.screen.width<992){
+    document.getElementById("questions_icon").append(" Ask question");
+    document.getElementById("answers_icon").append(" Answers");
+    document.getElementById("menu_other").append(" Other");
+    document.getElementById("notifications_icon").append(" Notifications");
+    document.getElementById("profile_icon").append(" Profile");
+  }
   </script>
   <script>
     // Create Django Ajax Call

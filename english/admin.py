@@ -57,15 +57,15 @@ class NotificationAdmin(admin.ModelAdmin):
     'unread',
     ]
     list_display = ('recipient', 'sender', 'verb', 'timestamp', 'unread')
-    ordering = ('-timestamp')
+    ordering = ('-timestamp',)
 
 class UserActionAdmin(admin.ModelAdmin):
     fields = [
     'user',
     'action',
-    'datetime'
     ]
     list_display = ('user', 'action', 'datetime')
+    ordering = ('-datetime',)
 
 admin.site.register(Essay, EssayAdmin)
 admin.site.register(Answer, AnswerAdmin)

@@ -39,7 +39,7 @@
 </head>
 
 <body class="blog-posts sidebar-collapse">
-  <nav class="navbar navbar-color-on-scroll navbar-transparent    fixed-top  navbar-expand-lg " color-on-scroll="100" id="sectionsNav">
+  <nav class="navbar fixed-top navbar-expand-lg" id="sectionsNav">
     <div class="container">
       <div class="navbar-translate">
         <a class="navbar-brand" href="/">
@@ -54,21 +54,21 @@
       <div class="collapse navbar-collapse">
 				{% if user.username %}
 					<ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+		          <a href="/profile" class="nav-link">
+		            <img class="media-object material-icons" src="{% static 'english/assets/images/identicons/'|add:user.profile.default_profile_picture|add:'.png' %}" alt="..."><span id="profile_icon"></span>
+		          </a>
+		        </li>
 		        <li class="nav-item">
 		          <a href="/#submit-question" class="nav-link">
-		            <i class="material-icons">live_help</i> Ask a question
+		            <span id="questions_icon"><i class="material-icons">live_help</i></span>
 		          </a>
 		        </li>
 						<li class="nav-item">
 							<a href="/market" class="nav-link">
-								<i class="material-icons">storefront</i> Answer questions
+								<span id="answers_icon"><i class="material-icons">storefront</i></span>
 							</a>
 						</li>
-		        <li class="nav-item">
-		          <a href="/profile" class="nav-link">
-		            <i class="material-icons">person</i> Profile
-		          </a>
-		        </li>
 						<li class="dropdown nav-item">
 		          <a href="#" id="read_notifications" class="nav-link" data-toggle="dropdown">
                   {% if has_unread_notifications %}
@@ -81,7 +81,7 @@
 								<!-- notification system -->
 								{% for notification in notifications|slice:":20" %}
                 <a href="/correction?essay_id={{ notification.action_object }}#{{ notification.target_object_id }}" class="dropdown-item {% if notification.verb == "won question" %}background-light-green{% elif notification.unread == True %} background-light-blue {% endif %}">
-                  <span style="font-size:0.85em;">{% if notification.verb == "won question" %}<strong>WINNER!</strong> You got the winning answer{% elif notification.verb == "answered question" %}@{{ notification.actor.username }} answered your question {% elif notification.verb == "also answered question" %}@{{ notification.actor.username }} also answered a question you are following {% elif notification.verb == "end question" %}A question you are following has ended {% endif %}<span style="font-size:0.7em;"> {{ notification.time_ago }}</span></span>
+									<span style="font-size:0.85em;">{% if notification.verb == "won question" %}<strong>WINNER!</strong> You got the winning answer{% elif notification.verb == "answered question" %}@{{ notification.actor.username }} answered your question {% elif notification.verb == "also answered question" %}@{{ notification.actor.username }} also answered a question you are following {% elif notification.verb == "end question" %}A question you are following has ended {% endif %}<span style="font-size:0.7em;"> {{ notification.time_ago }}</span></span>
                 </a>
 								{% endfor %}
               </div>
@@ -105,13 +105,13 @@
 				{% else %}
 					<ul class="navbar-nav ml-auto">
 						<li class="nav-item">
-							<a href="/" class="nav-link">
-								<i class="material-icons">home</i> Home
-							</a>
+              <a href="/#submit-question" class="nav-link">
+		            <span id="questions_icon"><i class="material-icons">live_help</i></span>
+		          </a>
 						</li>
 						<li class="nav-item">
-							<a href="/market" class="nav-link">
-								<i class="material-icons">storefront</i> Answer questions
+              <a href="/market" class="nav-link">
+								<span id="answers_icon"><i class="material-icons">storefront</i></span>
 							</a>
 						</li>
 						<li class="nav-item">
@@ -129,12 +129,10 @@
       </div>
     </div>
   </nav>
-  <div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('{% static 'english/assets/images/blue_fade_background.jpg' %}');">
+  <div class="page-header header-filter header-tiny" data-parallax="true" style="background-image: url('{% static 'english/assets/images/blue_fade_background.jpg' %}');">
     <div class="container">
       <div class="row">
         <div class="col-md-8 ml-auto mr-auto text-center">
-          <h2 class="title">Answer questions on the marketplace to earn <span style="color:yellow;">coins <i class="material-icons">copyright</i></strong></h2>
-          <a>The questionmaker chooses a <strong>winning</strong> answer who gets the full coin bounty</a>
         </div>
       </div>
     </div>
@@ -144,43 +142,20 @@
       <div class="section">
         <div class="row">
           <div class="col-md-12 ml-auto mr-auto text-center">
-            <ul class="nav nav-pills nav-pills-primary">
-              <li class="nav-item">
-                <a class="nav-link active" href="/#submit-question"><i class="material-icons">add</i>Ask a question</a>
-              </li>
-              <!--
-              <li class="nav-item">
-                <a class="nav-link" href="#pill2" data-toggle="tab">Math</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#pill3" data-toggle="tab">English</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#pill3" data-toggle="tab">Swedish</a>
-              </li>
-              -->
-            </ul>
+            <p>
+              <h4 class="title">Answer other's questions to win <span style="color:orange;">coins</h4>
+            </p>
             <div class="tab-content tab-space">
               <div class="tab-pane active" id="pill1">
                 <table class="table">
-                  <thead>
-                      <tr>
-                          <th class="text-left">Question title</th>
-                          <th class="text-left">Subject</th>
-                          <th></th>
-                          <th class="text-center">Bounty</th>
-                          <th class="text-center">Answers</th>
-                      </tr>
-                  </thead>
                   <tbody>
                     {% for essay in essay_list %}
                     {% if essay.has_ended == False and essay.is_valid == True %}
                       <tr class="hover-light-yellow" onclick="document.location='/correction?essay_id={{ essay.essay_id }}';">
-                        <td class="text-left">{{ essay.title|safe }} ... </td>
+                        <td class="text-left"><span style="color:blue;">{{ essay.title|safe }} ... </span></td>
                         <td class="text-left">{{ essay.subject|safe }}</td>
-                        <td class="text-left">asked {{ essay.get_date }}</td>
-                        <td class="text-center">{{ essay.bounty }} <i class="material-icons">copyright</i></td>
-                        <td class="text-center">{{ essay.answer_set.all|length }}</td>
+                        <td class="text-left">{{ essay.get_date }}</td>
+                        <td class="text-center"><span style="color:orange;"><strong>{{ essay.bounty }} coins</strong></span></td>
                       </tr>
                     {% endif %}
                     {% endfor %}
@@ -237,10 +212,13 @@
   </footer>
   <!--   Core JS Files   -->
   <script>
-    if(window.screen.width<992){
-      document.getElementById("notifications_icon").append(" Notifications");
-      document.getElementById("menu_other").append(" Other");
-    }
+  if(window.screen.width<992){
+    document.getElementById("questions_icon").append(" Ask question");
+    document.getElementById("answers_icon").append(" Answers");
+    document.getElementById("menu_other").append(" Other");
+    document.getElementById("notifications_icon").append(" Notifications");
+    document.getElementById("profile_icon").append(" Profile");
+  }
   </script>
   <script>
     // Create Django Ajax Call

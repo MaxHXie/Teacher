@@ -164,6 +164,7 @@ class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null=True)
     biography = models.TextField(max_length=200000, null=True, blank=True)
     coins = models.IntegerField(default=30)
+    experience = models.IntegerField(default=0)
 
     def __str__(self):
         return str(self.user.username)
