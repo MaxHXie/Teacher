@@ -177,6 +177,7 @@ class Profile(models.Model):
 
 class LikeQuestion(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null=True)
+    datetime = models.DateTimeField('datetime', auto_now_add=True)
     essay = models.ForeignKey(Essay, on_delete=models.CASCADE, null=True)
 
 class UserAction(models.Model):
