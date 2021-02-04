@@ -84,7 +84,7 @@ class Essay(models.Model):
 class Answer(models.Model):
     answer_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     essay = models.ForeignKey(Essay, on_delete=models.CASCADE, null=True)
-    answer_text = models.TextField(max_length=2000)
+    answer_text = models.TextField(max_length=3000)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null=True)
     upload_datetime = models.DateTimeField('date uploaded', auto_now_add=True)
     winner = models.BooleanField(default=False)
