@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Essay, Answer, Profile
+from .models import Essay, Answer, Profile, UserAction
 from notifications.models import Notification
 
 class EssayAdmin(admin.ModelAdmin):
@@ -59,6 +59,15 @@ class NotificationAdmin(admin.ModelAdmin):
     list_display = ('recipient', 'sender', 'verb', 'timestamp', 'unread')
     ordering = ('-timestamp')
 
+class UserActionAdmin(admin.ModelAdmin):
+    fields = [
+    'user',
+    'action',
+    'datetime'
+    ]
+    list_display = ('user', 'action', 'datetime')
+
 admin.site.register(Essay, EssayAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(UserAction, UserActionAdmin)
