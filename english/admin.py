@@ -15,7 +15,6 @@ class EssayAdmin(admin.ModelAdmin):
     'subject',
     'language',
     'upvotes',
-    'downvotes',
     'essay_text',
     'essay_correction_json',
     'errors',
