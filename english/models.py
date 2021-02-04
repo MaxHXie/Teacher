@@ -181,8 +181,11 @@ class LikeQuestion(models.Model):
     essay = models.ForeignKey(Essay, on_delete=models.CASCADE, null=True)
 
     def user_liked_question(sender, instance, created, *args, **kwargs):
+        like = instance
+        post = like.essay
+        sender = like.user
         if created is True:
-            notify = Notification(action_object=essay, actor=user, recipient=essay.author, target_object_id=essay.essay_id, verb="liked question")
+            notify = Notification(action_object=post, actor=sender, recipient=post.author, target_object_id=post.essay_id, verb="liked question")
             notify.save()
 
 
