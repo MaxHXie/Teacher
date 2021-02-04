@@ -180,6 +180,12 @@ class LikeQuestion(models.Model):
     datetime = models.DateTimeField('datetime', auto_now_add=True)
     essay = models.ForeignKey(Essay, on_delete=models.CASCADE, null=True)
 
+    def user_liked_question(sender, instance, created, *args, **kwargs):
+        if created is True:
+            notify = Notification(action_object=essay, actor=user, recipient=essay.author, target_object_id=essay.essay_id, verb="liked question")
+            notify.save()
+
+
 class UserAction(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null=True)
     datetime = models.DateTimeField('datetime', auto_now_add=True)
@@ -190,3 +196,4 @@ post_save.connect(Answer.user_answered_question, sender=Answer)
 post_save.connect(Answer.user_also_answered_question, sender=Answer)
 post_save.connect(Answer.user_won_question, sender=Answer)
 post_save.connect(Essay.question_ended, sender=Essay)
+post_save.connect(LikeQuestion.user_liked_question, sender=LikeQuestion)
