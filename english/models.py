@@ -176,7 +176,7 @@ class Profile(models.Model):
             return str(int(self.user.id) % 100)
 
 class LikeQuestion(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null=True)
     datetime = models.DateTimeField('datetime', auto_now_add=True)
     essay = models.ForeignKey(Essay, on_delete=models.CASCADE, null=True)
 

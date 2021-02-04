@@ -161,8 +161,6 @@ def like_question(request):
     if request.method == "GET":
         username = request.GET.get('username')
         essay = Essay.objects.filter(essay_id=request.GET.get('essay')).first()
-        print(username)
-        print(essay)
         if essay:
             if username == request.user.username:
                 try:
@@ -170,9 +168,9 @@ def like_question(request):
                 except:
                     like = False
                 if not like:
+                    LikeQuestion.objects.create(user=request.user, essay=essay)
                     essay.upvotes=essay.upvotes+1
                     essay.save()
-                    LikeQuestion.objects.create(user=request.user, essay=essay)
 
     return JsonResponse(data)
 
