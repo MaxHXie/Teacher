@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Essay, Answer, Profile, UserAction
+from .models import Essay, Answer, Profile, UserAction, LikeQuestion
 from notifications.models import Notification
 
 class EssayAdmin(admin.ModelAdmin):
@@ -48,6 +48,14 @@ class ProfileAdmin(admin.ModelAdmin):
     ]
     list_display = ('user', 'coins')
 
+class LikeQuestionAdmin(admin.ModelAdmin):
+    fields = [
+    'user',
+    'essay'
+    ]
+
+    list_display = ('user', 'essay')
+
 class NotificationAdmin(admin.ModelAdmin):
     fields = [
     'recipient',
@@ -70,4 +78,5 @@ class UserActionAdmin(admin.ModelAdmin):
 admin.site.register(Essay, EssayAdmin)
 admin.site.register(Answer, AnswerAdmin)
 admin.site.register(Profile, ProfileAdmin)
+admin.site.register(LikeQuestion, LikeQuestionAdmin)
 admin.site.register(UserAction, UserActionAdmin)

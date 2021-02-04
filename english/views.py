@@ -8,10 +8,11 @@ from django.template.defaultfilters import truncatechars
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from .forms import EssayForm, AnswerForm, CustomLoginForm
-from .models import Essay, Answer, Profile, UserAction
+from .models import Essay, Answer, Profile, UserAction, LikeQuestion
 from allauth.account.signals import user_signed_up
 from django.dispatch import receiver
 from datetime import datetime, timezone
+from django.db.models import F
 import math
 
 #notification system
@@ -153,6 +154,26 @@ def read_notifications(request):
         username = request.GET.get('username')
         if username == request.user.username:
             notifications = Notification.objects.filter(recipient=request.user, unread=True).update(unread=False)
+    return JsonResponse(data)
+
+def like_question(request):
+    data = {'username': request.user.username}
+    if request.method == "GET":
+        username = request.GET.get('username')
+        essay = Essay.objects.filter(essay_id=request.GET.get('essay')).first()
+        print(username)
+        print(essay)
+        if essay:
+            if username == request.user.username:
+                try:
+                    like = LikeQuestion.objects.get(user=request.user, essay=essay)
+                except:
+                    like = False
+                if not like:
+                    essay.upvotes=essay.upvotes+1
+                    essay.save()
+                    LikeQuestion.objects.create(user=request.user, essay=essay)
+
     return JsonResponse(data)
 
 def index(request):
@@ -396,9 +417,13 @@ def correction(request):
             answer_list = Answer.objects.all().filter(essay=essay).order_by('-upload_datetime')
             has_ended = essay.has_ended
             answer_form = AnswerForm()
+            if not LikeQuestion.objects.filter(user=request.user, essay=essay):
+                has_liked_question = "0"
+            else:
+                has_liked_question = "1"
             essay.views += 1
             essay.save()
-            return render(request, 'english/correction.html', {'essay': essay, 'answer_list': answer_list, 'has_ended': has_ended, 'scroll_section_id': scroll_section_id, 'answer_form': answer_form, 'error_types': error_types, 'essay_html': essay_html, 'notifications': notifications, 'has_unread_notifications': has_unread_notifications})
+            return render(request, 'english/correction.html', {'essay': essay, 'answer_list': answer_list, 'has_ended': has_ended, 'scroll_section_id': scroll_section_id, 'answer_form': answer_form, 'error_types': error_types, 'essay_html': essay_html, 'notifications': notifications, 'has_liked_question': has_liked_question, 'has_unread_notifications': has_unread_notifications})
         except (ValidationError, Essay.DoesNotExist) as e:
             return redirect('/')
     else:

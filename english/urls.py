@@ -14,4 +14,5 @@ urlpatterns = [
     path('winner', views.winner, name='winner'),
     path('get_coins', views.get_coins, name='get_coins'),
     path('read_notifications', views.read_notifications, name='read_notifications'),
+    path('like_question', views.like_question, name='like_question'),
 ]

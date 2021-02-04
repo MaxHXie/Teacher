@@ -138,7 +138,7 @@
         <div class="col-md-12 ml-auto mr-auto text-center">
           <h3 class="title"><span style="color:yellow;">{{ essay.bounty }} coins</span></h3>
           <p>{{ essay_html|safe }}</p>
-          <span class="title"><a style="color:rgb(255,255,255);" href="/profile?username={{ essay.author.username }}">@{{ essay.author }}</a></span><a href="#pablo" class="btn btn-danger btn-link"><i class="material-icons">favorite</i>{{ essay.upvotes }}</a>{{ essay.views }} views
+          <span class="title"><a style="color:rgb(255,255,255);" href="/profile?username={{ essay.author.username }}">@{{ essay.author }}</a></span><a href="#pablo" id="like_question" class="btn btn-danger btn-link"><i class="material-icons">favorite</i><span>{{ essay.upvotes }}</span></a>{{ essay.views }} views
           <br>
         </div>
       </div>
@@ -325,6 +325,30 @@
               dataType: 'json',
           });
         return false;
+      };
+  }
+  </script>
+  <script>
+    // Create Django Ajax Call
+    window.onload = function() {
+      like_question = document.getElementById("like_question")
+      like_question.onclick = function() {
+          console.log({{ has_liked_question }})
+          if({{ has_liked_question }} == '0'){
+              var new_upvotes = {{ essay.upvotes }} + 1
+              $(this).find('span').text(new_upvotes);
+
+              // Create Ajax Call
+              $.ajax({
+                  url: '/like_question',
+                  data: {
+                      'username': '{{ user.username }}',
+                      'essay': '{{ essay.essay_id }}',
+                  },
+                  dataType: 'json',
+              });
+          }
+          return false;
       };
   }
   </script>
