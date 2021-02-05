@@ -415,10 +415,10 @@ def correction(request):
             answer_list = Answer.objects.all().filter(essay=essay).order_by('-upload_datetime')
             has_ended = essay.has_ended
             answer_form = AnswerForm()
-            if not LikeQuestion.objects.filter(user=request.user, essay=essay):
-                has_liked_question = "0"
-            else:
-                has_liked_question = "1"
+            has_liked_question = "1"
+            if not request.user.is_anonymous:
+                if not LikeQuestion.objects.filter(user=request.user, essay=essay):
+                    has_liked_question = "0"
             essay.views += 1
             essay.save()
             return render(request, 'english/correction.html', {'essay': essay, 'answer_list': answer_list, 'has_ended': has_ended, 'scroll_section_id': scroll_section_id, 'answer_form': answer_form, 'error_types': error_types, 'essay_html': essay_html, 'notifications': notifications, 'has_liked_question': has_liked_question, 'has_unread_notifications': has_unread_notifications})
