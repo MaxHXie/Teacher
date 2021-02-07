@@ -154,7 +154,7 @@
                   <tbody>
                     {% for essay in essay_list %}
                     {% if essay.is_valid == True %}
-                      <tr class="hover-light-yellow{% if essay.has_ended %}background-light-green{% endif %}" onclick="document.location='/correction?essay_id={{ essay.essay_id }}';">
+                      <tr class="{% if essay.has_ended %}background-light-green{% endif %} hover-light-yellow" onclick="document.location='/correction?essay_id={{ essay.essay_id }}';">
                         <td class="text-left"><span style="color:blue;">{{ essay.title|safe }} ... </span></td>
                         <td class="text-left">{{ essay.subject|safe }}</td>
                         <td class="text-left">{{ essay.get_date }}</td>
